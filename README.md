@@ -7,4 +7,5 @@ http://artandcode.com/3d/workshops/4a-calibrating-projectors-and-cameras
 * Kyle MacDonald (http://kylemcdonald.net/)
 
 ## Notes
-Enclosed are openFrameworks examples of the principles from the workshop.
+Enclosed are openFrameworks examples which demonstrate the principles of the workshop.
+These examples are designed to work as practical tools for others to begin working with calibrating cameras and projectors.
