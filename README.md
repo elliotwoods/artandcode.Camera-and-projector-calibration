@@ -13,6 +13,7 @@ These examples are designed to work as practical tools for others to begin worki
 
 ## Platform
 These examples are generated on a range of platforms. Generally:
+
 * OSX, XCode 4
 * openFrameworks 007 [*]
 * ofxCv (https://github.com/kylemcdonald/ofxCv.git)
@@ -21,5 +22,6 @@ These examples are generated on a range of platforms. Generally:
    * (Note: sometimes examples may be built against the current github release at the time of creation. In these cases we should go back and edit the examples so they build/execute properly against the stable distribution available on website download).
 
 Some specific projects may require other dependencies e.g.
+
 * ofxPolyfit (https://github.com/elliotwoods/ofxPolyfit)
 * Simple GUI
