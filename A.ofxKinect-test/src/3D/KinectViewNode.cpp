@@ -55,7 +55,7 @@ void KinectViewNode::customDraw() {
 	
 	
 	ofPushMatrix();
-	ofScale(400.0f, 400.0f, 400.0f);
+	ofScale(-400.0f, -400.0f, -400.0f);
 	glDrawArrays(GL_POINTS, 0, nPoints);
 	ofPopMatrix();
 	
