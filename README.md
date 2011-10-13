@@ -18,8 +18,8 @@ These examples are generated on a range of platforms. Generally:
 * openFrameworks 007 [*]
 * ofxCv (https://github.com/kylemcdonald/ofxCv.git)
 * ofxCvGui (https://github.com/elliotwoods/ofxCVgui)
-* ofxOpenNI (unsure which one at present)
-   * (Note: sometimes examples may be built against the current github release at the time of creation. In these cases we should go back and edit the examples so they build/execute properly against the stable distribution available on website download).
+* ofxKinect (unsure which fork/branch at present)
+(Note: sometimes examples may be built against the current github release at the time of creation. In these cases we should go back and edit the examples so they build/execute properly against the stable distribution available on website download).
 
 Some specific projects may require other dependencies e.g.
 
