@@ -4,17 +4,14 @@ testApp::testApp() :
 kinectView(kinect),
 
 scrPreviewDepth("Depth", kinect.getDepthTextureReference()),
-scrPreviewRGB("RGB", kinect.getTextureReference()),
-scr3D("3D", kinectView),
-wdgTilt("Kinect tilt", tilt, -30, 30)
+scrPreviewRGB("RGB", kinect.getRGBTextureReference()),
+scr3D("3D", kinectView)
 
 {
 	scrMain.push(scrPreviewDepth);
 	scrMain.push(scrPreviewRGB);
 	scrMain.push(scrControl);
 	scrMain.push(scr3D);
-	
-	scrControl.push(wdgTilt);
 }
 
 //--------------------------------------------------------------
@@ -22,18 +19,13 @@ void testApp::setup(){
 	screens.init(scrMain);	
 	ofBackground(117/2,130/2,160/2);
 	
-	kinect.init();
-	kinect.open();
-	
-	tilt = kinect.getTargetCameraTiltAngle();
+	kinect.setupFromXML("openni/config/ofxopenni_config.xml",false);
+	kinect.enableCalibratedRGBDepth();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	kinect.update();
-	
-	if (wdgTilt.isValueNew())
-		kinect.setCameraTiltAngle(tilt);
 }
 
 //--------------------------------------------------------------

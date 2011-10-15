@@ -33,8 +33,6 @@ void KinectViewNode::update() {
 			
 			++currentXYZ;
 			++currentRGB;
-			
-			rgb[i+j*640] = kinect.getPixelsRef()[i+j*640];
 		}
 }
 

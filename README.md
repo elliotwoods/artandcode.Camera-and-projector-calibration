@@ -19,6 +19,7 @@ These examples are generated on a range of platforms. Generally:
 * ofxCv (https://github.com/kylemcdonald/ofxCv.git)
 * ofxCvGui (https://github.com/elliotwoods/ofxCVgui)
 * ofxKinect (unsure which fork/branch at present)
+* ofxOpenNI2 (further install instructions for OpenNI on osx at http://kinecthesis.bakedmac.com/2011/01/11/installing-openni-kinect-drivers-and-nite-on-mac-os-x-10-6/)
 (Note: sometimes examples may be built against the current github release at the time of creation. In these cases we should go back and edit the examples so they build/execute properly against the stable distribution available on website download).
 
 Some specific projects may require other dependencies e.g.

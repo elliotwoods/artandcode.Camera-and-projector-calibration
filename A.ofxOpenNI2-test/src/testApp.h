@@ -3,9 +3,9 @@
 #include "ofMain.h"
 
 #include "ofxCVgui.h"
-#include "ofxKinect.h"
+#include "ofxOpenNI.h"
 
-#include "KinectViewNode.h"
+#include "OpenNI2ViewNode.h"
 
 class testApp : public ofBaseApp{
 
@@ -32,13 +32,11 @@ protected:
 	// Device
 	//////////////////
 	//
-	ofxKinect			kinect;
-	
-	float				tilt;
+	ofxOpenNI			kinect;
 	//
 	//////////////////
 	
-	KinectViewNode	kinectView;
+	OpenNI2ViewNode		kinectView;
 	
 	
 	//////////////////
@@ -52,8 +50,6 @@ protected:
 	scrDraw2D		scrPreviewRGB;	
 	scrWidgets		scrControl;
 	scrDraw3D		scr3D;
-	
-	wdgSlider		wdgTilt;
 	//
 	//////////////////
 };

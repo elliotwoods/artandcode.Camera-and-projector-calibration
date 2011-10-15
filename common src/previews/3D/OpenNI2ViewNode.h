@@ -1,6 +1,6 @@
 //
-//  KinectViewNode.h
-//  ofxKinect-test
+//  OpenNI2ViewNode.h
+//  ofxOpenNI2-test
 //
 //  Created by Elliot Woods on 13/10/2011.
 //  Copyright 2011 Kimchi and Chips.
@@ -11,24 +11,30 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxKinect.h"
+#include "ofxOpenNI.h"
 
 /** 3D node view of Kinect data.
  We presume that kinect.update() is already being called.
+ or we're using OpenNI's threading
  */
-class KinectViewNode : public ofNode {
+class OpenNI2ViewNode : public ofNode {
 public:
-	KinectViewNode(ofxKinect& k);
+	OpenNI2ViewNode(ofxOpenNI& k);
+	
+	ofVec3f		lookup(ofVec2f xy);
+	vector<ofVec3f>	markers;
 	
 protected:
 	void		update();
 	void		customDraw();
 	
-	ofxKinect&	kinect;
+	ofxOpenNI&	kinect;
 	
-	ofFloatPixels	xyz;
-	ofPixels		rgb;
+	ofFloatPixels	Pxyz;
+	ofFloatPixels	Wxyz;
 	
 	GLuint			vbo[2];
 	GLuint			nPoints;
+	
+	float			width, height;
 };
