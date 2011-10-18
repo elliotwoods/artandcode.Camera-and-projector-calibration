@@ -9,3 +9,26 @@
 
 #include "ofxDepthRGBAlignment.h"
 
+ofxDepthRGBAlignment::ofxDepthRGBAlignment() {
+	
+}
+
+//-----------------------------------------------
+
+ofxDepthRGBAlignment::~ofxDepthRGBAlignment() {
+	
+}
+
+//-----------------------------------------------
+
+void ofxDepthRGBAlignment::setup() {
+	
+}
+
+//-----------------------------------------------
+
+void ofxDepthRGBAlignment::addCalibrationPair(ofPixels &depth, ofPixels &color) {
+	
+}
+
+//-----------------------------------------------

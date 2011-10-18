@@ -7,6 +7,13 @@
  *
  */
 
+#include "ofMain.h"
+
+#include "ofxCv.h"
+
+using namespace ofxCv;
+using namespace ofxC
+
 class ofxDepthRGBAlignment {
   public:
 	ofxDepthRGBAlignment();
@@ -15,7 +22,7 @@ class ofxDepthRGBAlignment {
 	
 	//calibratin of matrix
 	//TODO: set calibration files or directories
-	void addCalibrationPair(ofImage depthImage, ofImage colorImage);
+	void addCalibrationPair(ofPixels &depth, ofPixels &color);
 	void computeCalibration();
 	
 	//Display of dat
@@ -29,7 +36,7 @@ class ofxDepthRGBAlignment {
 	
   protected:
 	ofVboMesh mesh;
-	Calibration kinectCalibration, colorCalibration;    
+	Calibration depthCalibration, colorCalibration;    
 	Mat rotationKinectToColor, translationKinectToColor;
 	Mat rotationColorToKinect, translationColorToKinect;
 	
