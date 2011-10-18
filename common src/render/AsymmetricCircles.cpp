@@ -1,5 +1,5 @@
 //
-//  Chessboard.cpp
+//  AsymmetricCircles.cpp
 //  ProjectChessboard-client
 //
 //  Created by Elliot Woods on 13/10/2011.
@@ -8,25 +8,21 @@
 //	Distrubuted under the MIT license
 //	http://www.opensource.org/licenses/mit-license.php
 
-#include "Chessboard.h"
+#include "AsymmetricCircles.h"
 
-BoardMarker::BoardMarker() {
-	enabled = false;
-}
-
-Chessboard::Chessboard() :
-scale(0.7f),
+AsymmetricCircles::AsymmetricCircles() :
+scale(0.9f),
 squaresX(7), squaresY(5),
 whiteBackground(true),
-brightness(0.3) {
+brightness(0.5) {
 	
 }
 
-void Chessboard::draw(float x, float y) {
+void AsymmetricCircles::draw(float x, float y) {
 	this->draw(x, y, ofGetViewportWidth(), ofGetViewportHeight());
 }
 
-void Chessboard::draw(float x, float y, float w, float h) {
+void AsymmetricCircles::draw(float x, float y, float w, float h) {
 	
 	ofPushStyle();
 	ofSetLineWidth(0.0f);
@@ -57,16 +53,9 @@ void Chessboard::draw(float x, float y, float w, float h) {
 		}
 	
 	ofPopStyle();
-	
-	ofPushStyle();
-	ofSetLineWidth(3.0f);
-	ofSetColor(255,0,0);
-	for (int i=0; i<10; ++i)
-		ofCircle(markers[i].xy.x, markers[i].xy.y, 10);
-	ofPopStyle();
 }
 
-vector<ofVec2f> Chessboard::getProjectionSpaceCorners() const {
+vector<ofVec2f> AsymmetricCircles::getProjectionSpaceCorners() const {
 	
 	vector<ofVec2f> corners;
 	
@@ -77,23 +66,26 @@ vector<ofVec2f> Chessboard::getProjectionSpaceCorners() const {
 	
 	for (int i=1; i<squaresX; ++i)
 		for (int j=1; j<squaresY; ++j) {
+			
 			corners.push_back(inset + step * ofVec2f(i, j));
+			
 		}
 	
 	return corners;
 }
 
-bool Chessboard::findCorners(ofPixels &image, vector<ofVec2f> &points) const {
-	int subPixSearch = image.getWidth() / squaresX / 10.0f;
-	if (subPixSearch % 2 == subPixSearch)
-		subPixSearch++; //ensure odd numbers
-	
-    int chessFlags = CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK;
+bool AsymmetricCircles::findFeatures(ofPixels &image, vector<ofVec2f> &points) const {
     bool found;
 	
 	Mat img = toCv(image);
     
-    found = findChessboardCorners(img, cv::Size(squaresX-1, squaresY-1), *(vector<Point2f>*)&points, chessFlags);
+	//found = findChessboardCorners(img, cv::Size(squaresX, squaresY), *(vector<ofVec2f>*)&points, CV_CALIB_CB_ADAPTIVE_THRESH);
+	/*
+    // improve corner accuracy
+    if(found) {
+		cornerSubPix(img, points, cv::Size(subPixSearch, subPixSearch),  cv::Size(-1,-1), TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1 ));
+    }
+	 */
     
     return found;
 }

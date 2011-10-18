@@ -61,6 +61,7 @@ protected:
 	wdgSlider		wdgBrightness;
 	wdgButton		wdgCapture;
 	wdgSlider		wdgCursor;
+	wdgSlider		wdgError;
 	//
 	//////////////////
 	
@@ -79,6 +80,15 @@ protected:
 	//
 	//////////////////
 	
-	CorrelateXYZtoXY	data;
+	
+	//////////////////
+	// Correlation
+	//////////////////
+	//
 	void				capture();
+	
+	CorrelateXYZtoXY	correlation;
+	bool				showMarkers;
+	//
+	//////////////////
 };

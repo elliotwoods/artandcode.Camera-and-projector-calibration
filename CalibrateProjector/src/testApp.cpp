@@ -11,7 +11,8 @@ wdgScale("Chessboard scale", board.scale, 0, 1.0f, 0.01f),
 wdgWhiteBackground("White background", board.whiteBackground),
 wdgBrightness("Brightness", board.brightness, 0, 1.0f, 0.01f),
 wdgCapture("Capture"),
-wdgCursor("World cursor", worldCursor, -3.0f, 3.0f, 0.01f, "m") {
+wdgCursor("World cursor", worldCursor, -3.0f, 3.0f, 0.01f, "m"),
+wdgError("Reprojection error", correlation.error, 0, 200, 0.01f, "pixels") {
 	scrMain.push(scrControl);
 	scrMain.push(scrPreviewBoard);
 	scrMain.push(scrPreviewRGB);
@@ -22,6 +23,12 @@ wdgCursor("World cursor", worldCursor, -3.0f, 3.0f, 0.01f, "m") {
 	scrControl.push(wdgBrightness);
 	scrControl.push(wdgCapture);
 	scrControl.push(wdgCursor);
+	scrControl.push(wdgError);
+	scrControl.push(new wdgCounter("Datapoints", correlation.count));
+	wdgError.enabled = false;
+	scrControl.push(new wdgButton("Reproject chess", showMarkers));
+
+	showMarkers = false;
 	
 	wdgCapture.setHotKey(' ');
 }
@@ -51,17 +58,32 @@ void testApp::update(){
 	
 	kinect.update();
 	
-	if (wdgScale.isValueNew() || wdgWhiteBackground.isValueNew()) {
-		TalkyMessage msg;
-		msg << board;
-		client << msg;
-	}
-	
 	board.findCorners(kinect.getRGBPixels(), foundCornersC);	
 	kinect.cameraToWorld(foundCornersC, foundCornersW);
 	
 	if (wdgCapture.getBang())
 		capture();
+	
+	if (showMarkers) {
+		vector<ofVec3f>::iterator it;
+		int iMarker = 0;
+		for (it = foundCornersW.begin(); it != foundCornersW.end(); ++it) {
+			board.markers[iMarker].enabled = true;
+			board.markers[iMarker].xy = correlation.project(*it);
+			if (iMarker++ >= 10)
+				break;
+		}
+	} else {
+		for (int i=0; i<10; ++i) {
+			board.markers[i].enabled = false;
+		}
+	}
+	
+	if (wdgScale.isValueNew() || wdgWhiteBackground.isValueNew() || wdgBrightness.isValueNew() || showMarkers || ofGetFrameNum() % 10 == 0) {
+		TalkyMessage msg;
+		msg << board;
+		client << msg;
+	}
 }
 
 //--------------------------------------------------------------
@@ -131,7 +153,7 @@ void testApp::drawFoundCorners3D(ofNode &n){
 	//////////////
 	//
 	ofPushStyle();
-	data.draw();	
+	correlation.draw();	
 	ofPopStyle();
 	//
 	//////////////
@@ -160,7 +182,7 @@ void testApp::capture() {
 	
 	for (int i=0; i<foundCornersC.size(); ++i)
 		if (foundCornersW[i].length() > 0.5f)
-			data.push(foundCornersW[i], projectedCornersP[i]);
+			correlation.push(foundCornersW[i], projectedCornersP[i]);
 	
-	data.correlate();
+	correlation.correlate();
 }

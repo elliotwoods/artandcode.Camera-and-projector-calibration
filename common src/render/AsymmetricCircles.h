@@ -1,5 +1,5 @@
 //
-//  Chessboard.h
+//  AsymmetricCircles.h
 //  ProjectChessboard-client
 //
 //  Created by Elliot Woods on 13/10/2011.
@@ -16,16 +16,9 @@
 using namespace cv;
 using namespace ofxCv;
 
-class BoardMarker {
+class AsymmetricCircles : public ofBaseDraws {
 public:
-	BoardMarker();
-	bool enabled;
-	ofVec2f xy;
-};
-
-class Chessboard : public ofBaseDraws {
-public:
-	Chessboard();
+	AsymmetricCircles();
 	
 	///////////////
 	// ofBaseDraws
@@ -48,13 +41,11 @@ public:
 	vector<ofVec2f>	getProjectionSpaceCorners() const;
 	
 	///Find chessboard corners within a camera image
-	bool	findCorners(ofPixels &image, vector<ofVec2f> &points) const;
+	bool	findFeatures(ofPixels &image, vector<ofVec2f> &points) const;
 	
 	
 	float	squaresX, squaresY; //number of squares
 	float	scale; ///<Relative to viewport. 1=fill viewport, 0=nothing
 	bool	whiteBackground;
 	float	brightness;
-	
-	BoardMarker markers[10];
 };
