@@ -71,6 +71,7 @@
 		E7C4A644144DE700006A94E4 /* ofxKinectCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A634144DE6FF006A94E4 /* ofxKinectCalibration.cpp */; };
 		E7C4A645144DE700006A94E4 /* ofxKinectPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A636144DE6FF006A94E4 /* ofxKinectPlayer.cpp */; };
 		E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A638144DE6FF006A94E4 /* ofxKinectRecorder.cpp */; };
+		E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -326,6 +327,8 @@
 		E7C4A637144DE6FF006A94E4 /* ofxKinectPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinectPlayer.h; sourceTree = "<group>"; };
 		E7C4A638144DE6FF006A94E4 /* ofxKinectRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxKinectRecorder.cpp; sourceTree = "<group>"; };
 		E7C4A639144DE6FF006A94E4 /* ofxKinectRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinectRecorder.h; sourceTree = "<group>"; };
+		E7C4A65E144DF1E0006A94E4 /* ofxDepthRGBAlignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDepthRGBAlignment.h; sourceTree = "<group>"; };
+		E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDepthRGBAlignment.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -737,6 +740,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
+				E7C4A65E144DF1E0006A94E4 /* ofxDepthRGBAlignment.h */,
+				E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1314,6 +1319,7 @@
 				E7C4A644144DE700006A94E4 /* ofxKinectCalibration.cpp in Sources */,
 				E7C4A645144DE700006A94E4 /* ofxKinectPlayer.cpp in Sources */,
 				E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */,
+				E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
