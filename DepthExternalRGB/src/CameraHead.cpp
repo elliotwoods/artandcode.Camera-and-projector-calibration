@@ -201,6 +201,7 @@ void CameraHead::threadedFunction() {
 	
 	while (isThreadRunning())
 	{
+
 		lock();
 		memcpy(greyThreadedInternal.getPixels(), greyBetweenBuffer.getPixels(), width*height);
 		unlock();

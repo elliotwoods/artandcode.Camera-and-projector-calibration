@@ -72,6 +72,7 @@
 		E7C4A645144DE700006A94E4 /* ofxKinectPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A636144DE6FF006A94E4 /* ofxKinectPlayer.cpp */; };
 		E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A638144DE6FF006A94E4 /* ofxKinectRecorder.cpp */; };
 		E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */; };
+		E7C4A721144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A720144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -329,6 +330,8 @@
 		E7C4A639144DE6FF006A94E4 /* ofxKinectRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinectRecorder.h; sourceTree = "<group>"; };
 		E7C4A65E144DF1E0006A94E4 /* ofxDepthRGBAlignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDepthRGBAlignment.h; sourceTree = "<group>"; };
 		E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDepthRGBAlignment.cpp; sourceTree = "<group>"; };
+		E7C4A71F144E211F006A94E4 /* ofxCvCheckerboardPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCvCheckerboardPreview.h; sourceTree = "<group>"; };
+		E7C4A720144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCvCheckerboardPreview.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -733,15 +736,10 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E7C4A301144DC38B006A94E4 /* Ray.h */,
-				E7C4A300144DC38B006A94E4 /* Ray.cpp */,
-				E7C4A2FE144DC34C006A94E4 /* CameraHead.h */,
-				E7C4A2FD144DC34C006A94E4 /* CameraHead.cpp */,
-				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
+				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
-				E7C4A65E144DF1E0006A94E4 /* ofxDepthRGBAlignment.h */,
-				E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */,
+				E7C4A6D0144E0C34006A94E4 /* shared source */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1190,6 +1188,21 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E7C4A6D0144E0C34006A94E4 /* shared source */ = {
+			isa = PBXGroup;
+			children = (
+				E7C4A65E144DF1E0006A94E4 /* ofxDepthRGBAlignment.h */,
+				E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */,
+				E7C4A71F144E211F006A94E4 /* ofxCvCheckerboardPreview.h */,
+				E7C4A720144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp */,
+				E7C4A301144DC38B006A94E4 /* Ray.h */,
+				E7C4A300144DC38B006A94E4 /* Ray.cpp */,
+				E7C4A2FE144DC34C006A94E4 /* CameraHead.h */,
+				E7C4A2FD144DC34C006A94E4 /* CameraHead.cpp */,
+			);
+			name = "shared source";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1320,6 +1333,7 @@
 				E7C4A645144DE700006A94E4 /* ofxKinectPlayer.cpp in Sources */,
 				E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */,
 				E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */,
+				E7C4A721144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
