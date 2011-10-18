@@ -415,8 +415,8 @@
 		8BC1E7E41445D20900C642A0 /* GUIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIConstants.h; sourceTree = "<group>"; };
 		8BC1E7E51445D20900C642A0 /* GUIGlobal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIGlobal.cpp; sourceTree = "<group>"; };
 		8BC1E7E61445D20900C642A0 /* GUIGlobal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIGlobal.h; sourceTree = "<group>"; };
-		8BC1E7E71445D20900C642A0 /* ofxCVgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ofxCVgui.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		8BC1E7E81445D20900C642A0 /* ofxCVgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ofxCVgui.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8BC1E7E71445D20900C642A0 /* ofxCVgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ofxCVgui.cpp; sourceTree = "<group>"; };
+		8BC1E7E81445D20900C642A0 /* ofxCVgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ofxCVgui.h; sourceTree = "<group>"; };
 		8BC1E7EB1445D20900C642A0 /* scrGroupBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrGroupBase.cpp; sourceTree = "<group>"; };
 		8BC1E7EC1445D20900C642A0 /* scrGroupBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scrGroupBase.h; sourceTree = "<group>"; };
 		8BC1E7ED1445D20900C642A0 /* scrGroupGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrGroupGrid.cpp; sourceTree = "<group>"; };

@@ -79,5 +79,6 @@ protected:
 	//
 	//////////////////
 	
-	CorrelateXYZtoXY	correlate;
+	CorrelateXYZtoXY	data;
+	void				capture();
 };

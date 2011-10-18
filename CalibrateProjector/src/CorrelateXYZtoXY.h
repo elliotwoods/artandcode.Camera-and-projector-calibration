@@ -12,13 +12,20 @@
 
 #include "ofMain.h"
 
+#include "ofxCv.h"
+
+using namespace cv;
+using namespace ofxCv;
+
 class CorrelateXYZtoXY {
 public:
 	void	push(ofVec3f &xyz, ofVec2f &xy);
 	void	clear();
 	int		size();
 	
-	void	drawXYZ();
+	void	draw();
+	
+	void	correlate();
 	
 	vector<ofVec3f>	xyz;
 	vector<ofVec2f>	xy;

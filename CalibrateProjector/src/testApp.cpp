@@ -60,13 +60,8 @@ void testApp::update(){
 	board.findCorners(kinect.getRGBPixels(), foundCornersC);	
 	kinect.cameraToWorld(foundCornersC, foundCornersW);
 	
-	if (wdgCapture.getBang()) {
-		projectedCornersP = board.getProjectionSpaceCorners();
-		
-		for (int i=0; i<foundCornersC.size(); ++i)
-			if (foundCornersW[i].length() > 0.5f)
-				correlate.push(foundCornersW[i], projectedCornersP[i]);
-	}
+	if (wdgCapture.getBang())
+		capture();
 }
 
 //--------------------------------------------------------------
@@ -136,7 +131,7 @@ void testApp::drawFoundCorners3D(ofNode &n){
 	//////////////
 	//
 	ofPushStyle();
-	
+	data.draw();	
 	ofPopStyle();
 	//
 	//////////////
@@ -153,14 +148,19 @@ void testApp::drawFoundCorners3D(ofNode &n){
 	ofSetColor(255, 50, 50);
 	ofSphere(0.02);
 	
-//	glDisable(GL_DEPTH_TEST);
-//	ofSetColor(255,255,255);
-//	ofSetLineWidth(3.0f);
-//	ofNoFill();
-//	ofCircle(0,0,0.02);
-//	glEnable(GL_DEPTH_TEST);
 	ofPopStyle();
 	ofPopMatrix();
 	//
 	//////////////
+}
+
+//--------------------------------------------------------------
+void testApp::capture() {
+	projectedCornersP = board.getProjectionSpaceCorners();
+	
+	for (int i=0; i<foundCornersC.size(); ++i)
+		if (foundCornersW[i].length() > 0.5f)
+			data.push(foundCornersW[i], projectedCornersP[i]);
+	
+	data.correlate();
 }

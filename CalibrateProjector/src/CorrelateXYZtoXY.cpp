@@ -27,8 +27,17 @@ int CorrelateXYZtoXY::size() {
 	return xyz.size();
 }
 
-void CorrelateXYZtoXY::drawXYZ() {
+void CorrelateXYZtoXY::draw() {
 	ofPushStyle();
 	xyzPreview.draw();
 	ofPopStyle();
+}
+
+void CorrelateXYZtoXY::correlate() {
+	if (size() < 11)
+		return;
+	
+	vector<vector<Point3f> > vvo(1); //object points
+	vector<vector<Point2d> > vvi1(1), vvi2(); //image points
+//	float e = stereoCalibrate();
 }
