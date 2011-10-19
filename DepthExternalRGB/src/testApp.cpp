@@ -11,31 +11,34 @@ void testApp::setup(){
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
 	
+	kinect.init(true);
+	kinect.setVerbose(true);
+	kinect.open();
 	
 	rgbcamera.setDeviceID(8);
 	rgbcamera.initGrabber(640, 480);
 	
 	kinectCheckerPreview.setup(10,7,4);
 	cameraCheckerPreview.setup(10,7,4);
+	depthRGBAlignment.setup(10,7,4);
 	
 	kinectView = new scrDraw2D("Kinect View", kinect.getTextureReference());
 	cameraView = new scrDraw2D("Camera View", grayCopy);
-	pointcloudView = new scrDraw3D("Point Cloud", pointcloudNode);
+	depthView  = new scrDraw2D("Depth View", kinect.getDepthTextureReference());
+	pointcloudView = new scrGameView3D("Point Cloud", "PointCamera.xml");
 	
-	depthRGBAlignment.setup(10,7,4);
 	mainScreen = new scrGroupGrid();
 	mainScreen->push(kinectView);
 	mainScreen->push(cameraView);
+	mainScreen->push(depthView);
 	mainScreen->push(pointcloudView);
-	gui.init(*mainScreen);
 	
 	ofAddListener(kinectView->evtDraw, this, &testApp::drawOnKinect);
 	ofAddListener(cameraView->evtDraw, this, &testApp::drawOnCamera);
-	ofAddListener(pointcloudView->evtDraw, this, &testApp::drawOnPoint);
-	
-	kinect.init(true, true, true);	
-	kinect.open();
-	
+	ofAddListener(pointcloudView->evtDraw3D, this, &testApp::drawOnPoint);
+	gui = new ofxCVgui();
+	gui->init(*mainScreen);
+
 	gamecam.speed = 5;
 	gamecam.usemouse = true;
 	gamecam.autosavePosition = true;
@@ -47,6 +50,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+	
 	bool isupdated = false;
 	kinect.update();
 	if(kinect.isFrameNew()){
@@ -75,6 +79,7 @@ void testApp::update(){
 void testApp::draw(){
 	//cam.setPosition(depthRGBAlignment.getMeshCenter() + ofVec3f(0,0,1) * (depthRGBAlignment.getMeshDistance() + ofGetMouseX()) );
 	//cam.lookAt(depthRGBAlignment.getMeshCenter(), ofVec3f(0,1,0));
+	
 }
 
 void testApp::drawOnKinect(ofRectangle& drawRect){
@@ -85,15 +90,15 @@ void testApp::drawOnCamera(ofRectangle& drawRect){
 	cameraCheckerPreview.draw(drawRect);
 }
 
-void testApp::drawOnPoint(ofRectangle& drawRect){
+void testApp::drawOnPoint(ofNode& drawNode){
 	//	cam.begin();
 	//gamecam.begin(drawRect);
 	
 	depthRGBAlignment.drawPointCloud();
-	ofPushStyle();
-	ofSetColor(255, 0, 0);
-	ofBox(pointcloudNode.getPosition(), 2);
-	ofPopStyle();
+//	ofPushStyle();
+//	ofSetColor(255, 0, 0);
+//	ofBox(pointcloudNode.getPosition(), 2);
+//	ofPopStyle();
 	
 	//cam.end();
 	//gamecam.end();
@@ -117,6 +122,10 @@ void testApp::keyPressed(int key){
 	if(key == 'v'){
 		rgbcamera.videoSettings();
 	}
+}
+
+void testApp::exit() {
+	kinect.close();
 }
 
 //--------------------------------------------------------------

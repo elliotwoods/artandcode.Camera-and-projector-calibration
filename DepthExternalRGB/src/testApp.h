@@ -7,6 +7,7 @@
 #include "ofxGameCamera.h"
 
 #include "ofxCVgui.h"
+#include "scrGameView3D.h"
 
 using namespace ofxCv;
 using namespace cv;
@@ -29,6 +30,7 @@ class testApp : public ofBaseApp{
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+	void exit();
 	
 	ofxCvCheckerboardPreview kinectCheckerPreview;
 	ofxCvCheckerboardPreview cameraCheckerPreview;
@@ -40,16 +42,17 @@ class testApp : public ofBaseApp{
 	ofxGameCamera gamecam;
 	ofCamera cam;
 	
-	ofxCVgui gui;
+	ofxCVgui* gui;
 	scrGroupGrid* mainScreen;
 	scrDraw2D* kinectView;
+	scrDraw2D* depthView;
 	scrDraw2D* cameraView;
-	scrDraw3D* pointcloudView;
-	
+//	scrDraw3D* pointcloudView;
+	scrGameView3D* pointcloudView;
 	ofNode pointcloudNode;
 	
 	void drawOnKinect(ofRectangle& drawRect);
 	void drawOnCamera(ofRectangle& drawRect);
-	void drawOnPoint(ofRectangle& drawRect);
+	void drawOnPoint(ofNode& drawNode);
 	
 };
