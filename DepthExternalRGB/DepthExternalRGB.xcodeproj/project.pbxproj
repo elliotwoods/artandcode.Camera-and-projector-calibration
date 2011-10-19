@@ -73,6 +73,11 @@
 		E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A638144DE6FF006A94E4 /* ofxKinectRecorder.cpp */; };
 		E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */; };
 		E7C4A721144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A720144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp */; };
+		E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */; };
+		E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AED144E60200065E4C0 /* tinyxml.cpp */; };
+		E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */; };
+		E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */; };
+		E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -332,6 +337,15 @@
 		E7C4A65F144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDepthRGBAlignment.cpp; sourceTree = "<group>"; };
 		E7C4A71F144E211F006A94E4 /* ofxCvCheckerboardPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCvCheckerboardPreview.h; sourceTree = "<group>"; };
 		E7C4A720144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxCvCheckerboardPreview.cpp; sourceTree = "<group>"; };
+		E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
+		E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
+		E7CA4AEB144E60200065E4C0 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
+		E7CA4AED144E60200065E4C0 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		E7CA4AEE144E60200065E4C0 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -671,6 +685,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */,
+				E7CA4A35144E60070065E4C0 /* ofxGameCamera */,
 				E7C4A54B144DE6FF006A94E4 /* ofxKinect */,
 				E7C4A305144DC3A3006A94E4 /* ofxCVgui */,
 				2705B337143D6DA300F2A09E /* ofxCv */,
@@ -1203,6 +1219,55 @@
 			name = "shared source";
 			sourceTree = "<group>";
 		};
+		E7CA4A35144E60070065E4C0 /* ofxGameCamera */ = {
+			isa = PBXGroup;
+			children = (
+				E7CA4AD0144E60080065E4C0 /* src */,
+			);
+			name = ofxGameCamera;
+			path = ../../../addons/ofxGameCamera;
+			sourceTree = SOURCE_ROOT;
+		};
+		E7CA4AD0144E60080065E4C0 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */,
+				E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E7CA4AEB144E60200065E4C0 /* install.xml */,
+				E7CA4AEC144E60200065E4C0 /* libs */,
+				E7CA4AF1144E60200065E4C0 /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../addons/ofxXmlSettings;
+			sourceTree = SOURCE_ROOT;
+		};
+		E7CA4AEC144E60200065E4C0 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E7CA4AED144E60200065E4C0 /* tinyxml.cpp */,
+				E7CA4AEE144E60200065E4C0 /* tinyxml.h */,
+				E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */,
+				E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E7CA4AF1144E60200065E4C0 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */,
+				E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1334,6 +1399,11 @@
 				E7C4A646144DE700006A94E4 /* ofxKinectRecorder.cpp in Sources */,
 				E7C4A660144DF1E0006A94E4 /* ofxDepthRGBAlignment.cpp in Sources */,
 				E7C4A721144E211F006A94E4 /* ofxCvCheckerboardPreview.cpp in Sources */,
+				E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */,
+				E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */,
+				E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */,
+				E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */,
+				E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

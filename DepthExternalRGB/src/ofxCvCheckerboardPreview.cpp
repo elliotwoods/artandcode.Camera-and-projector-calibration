@@ -68,7 +68,7 @@ void ofxCvCheckerboardPreview::draw(const ofRectangle& rect){
 	ofSetColor(255, 255,255, alpha);
 	
 	float x, y;
-	for (int i=0; i < imagePoints.size(); ++i) {
+	for (int i = 0; i < imagePoints.size(); ++i) {
 		x = ofMap(imagePoints[i].x, 0, testImage.getWidth(), rect.x, rect.x + rect.width, false);
 		y = ofMap(imagePoints[i].y, 0, testImage.getHeight(), rect.y, rect.y + rect.height, false);
 		

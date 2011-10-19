@@ -20,11 +20,11 @@ class ofxDepthRGBAlignment {
 	ofxDepthRGBAlignment();
 	~ofxDepthRGBAlignment();
 	
-	void setup();
+	void setup(int squaresWide, int squaresTall, int squareSize);
 	
-	void addCalibrationImagePair(ofPixels& depth, ofPixels &color);	//TODO: set calibration files
-	void setCalibrationDirectoryPair(string depthImageDirectory, string colorImageDirectory);
-	
+	bool addCalibrationImagePair(ofPixels& ir, ofPixels &camera);	//TODO: set calibration files
+	bool setCalibrationDirectoryPair(string irImageDirectory, string colorImageDirectory);
+	bool ready();
 //	void saveCalibration(string filename);
 
 	//Display of dat
@@ -34,7 +34,14 @@ class ofxDepthRGBAlignment {
 
 	void drawMesh();
 	void drawPointCloud();
-		
+	
+	void saveCalibration();
+	void loadCalibration();
+	void resetCalibration();
+	
+	ofVec3f getMeshCenter();
+	float getMeshDistance();
+	
   protected:
 	bool hasDepthImage;
 	bool hasColorImage;
@@ -56,5 +63,8 @@ class ofxDepthRGBAlignment {
 	Mat rotationColorToDepth, translationColorToDepth;
 	
 	Mat rotation, translation;
+	
+	ofVec3f meshCenter;
+	float meshDistance;
 	
 };

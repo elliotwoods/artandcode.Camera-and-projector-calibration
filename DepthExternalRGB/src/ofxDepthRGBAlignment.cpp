@@ -31,20 +31,54 @@ ofxDepthRGBAlignment::~ofxDepthRGBAlignment() {
 
 //-----------------------------------------------
 
-void ofxDepthRGBAlignment::setup() {
+void ofxDepthRGBAlignment::setup(int squaresWide, int squaresTall, int squareSize) {
 	hasDepthImage = false;
 	hasColorImage = false;
+	
+	depthCalibration.setPatternSize(squaresWide, squaresTall);
+	depthCalibration.setSquareSize(squareSize);
+	
+	colorCalibration.setPatternSize(squaresWide, squaresTall);
+	colorCalibration.setSquareSize(squareSize);
 
 }
 
 //-----------------------------------------------
-void ofxDepthRGBAlignment::addCalibrationImagePair(ofPixels &depth, ofPixels &color) {
-	//TODO:
+bool ofxDepthRGBAlignment::addCalibrationImagePair(ofPixels &ir, ofPixels &camera) {
+
+	if(depthCalibration.add(toCv(ir))){
+		if(!colorCalibration.add(toCv(camera))){
+			depthCalibration.imagePoints.erase(depthCalibration.imagePoints.end()-1);
+		}		
+	}
+	
+	if(depthCalibration.imagePoints.size() != colorCalibration.imagePoints.size()){
+		ofLogError("ofxDepthRGBAlignment -- image point sizes differ!");
+		return false;
+	}
+	
+	if(depthCalibration.imagePoints.size() > 3){
+		depthCalibration.calibrate();
+		colorCalibration.calibrate();
+	}
+	
+	if(depthCalibration.isReady() && colorCalibration.isReady()){
+		depthCalibration.getTransformation(colorCalibration, rotationDepthToColor, translationDepthToColor);
+		colorCalibration.getTransformation(depthCalibration, rotationColorToDepth, translationColorToDepth);
+		
+		cout << "Kinect to Color:" << endl << rotationDepthToColor << endl << translationDepthToColor << endl;
+		cout << "Color to Kinect:" << endl << rotationColorToDepth << endl << translationColorToDepth << endl;
+
+		return true;
+	}
+	
+	//cout << " NOT READY! " << depthCalibration.isReady() << " " <<  colorCalibration.isReady()  << " ? ?" << depthCalibration.imagePoints.size() << " " << colorCalibration.imagePoints.size() << endl;
+	return false;
 }
 
 //-----------------------------------------------
 
-void ofxDepthRGBAlignment::setCalibrationDirectoryPair(string depthImageDirectory, string colorImageDirectory){
+bool ofxDepthRGBAlignment::setCalibrationDirectoryPair(string depthImageDirectory, string colorImageDirectory){
 	
 	depthCalibration.calibrateFromDirectory(depthImageDirectory);
 	colorCalibration.calibrateFromDirectory(colorImageDirectory);
@@ -55,8 +89,32 @@ void ofxDepthRGBAlignment::setCalibrationDirectoryPair(string depthImageDirector
 	cout << "Kinect to Color:" << endl << rotationDepthToColor << endl << translationDepthToColor << endl;
 	cout << "Color to Kinect:" << endl << rotationColorToDepth << endl << translationColorToDepth << endl;
 	
+	return depthCalibration.isReady() && colorCalibration.isReady();
 }
 
+bool ofxDepthRGBAlignment::ready(){
+	return depthCalibration.isReady() && colorCalibration.isReady();
+}
+
+void ofxDepthRGBAlignment::saveCalibration() {
+	depthCalibration.save("depthCalib.yml");	
+	colorCalibration.save("colorCalib.yml");
+}
+void ofxDepthRGBAlignment::loadCalibration() {
+	depthCalibration.load("depthCalib.yml");
+	colorCalibration.load("colorCalib.yml");
+	
+	depthCalibration.getTransformation(colorCalibration, rotationDepthToColor, translationDepthToColor);
+	colorCalibration.getTransformation(depthCalibration, rotationColorToDepth, translationColorToDepth);
+	cout << "Kinect to Color:" << endl << rotationDepthToColor << endl << translationDepthToColor << endl;
+	cout << "Color to Kinect:" << endl << rotationColorToDepth << endl << translationColorToDepth << endl;
+
+}
+
+void ofxDepthRGBAlignment::resetCalibration() {
+	//TODO:
+}
+	
 /*
 void ofxDepthRGBAlignment::saveCalibration(Calibration& from, Calibration& to, string filename) {
 	Mat rotation, translation;
@@ -87,10 +145,16 @@ void ofxDepthRGBAlignment::setDepthImage(unsigned short* depthImage) {
 }
 
 void ofxDepthRGBAlignment::update() {
-	if(hasColorImage && hasDepthImage){
+
+	if(colorCalibration.isReady() && depthCalibration.isReady()){
+		cout << "ready update " << endl; 
 		updatePointCloud();
 		updateColors();
 	}
+	else {
+		//cout << "unready update" << endl;
+	}
+		
 }
 
 void ofxDepthRGBAlignment::updatePointCloud() {
@@ -108,6 +172,8 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 	
 	int w = Xres;
 	int h = Yres;
+	cout << " calculated image size " << imageSize.width << " x " << imageSize.height << endl;
+	
 	//	int w = curKinect.getWidth();
 	//	int h = curKinect.getHeight();
 	//	float* pixels = curKinect.getPixels();
@@ -119,25 +185,48 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 	 principalPoint.y += ofMap(mouseY, 0, ofGetHeight(), -4, 4);
 	 cout << "fudge: " << ofMap(mouseX, 0, ofGetWidth(), -4, 4) << "x" << ofMap(mouseY, 0, ofGetHeight(), -4, 4) << endl;
 	 */
+	ofVec3f center(0,0,0);
 	
 	for(int y = 0; y < h; y++) {
 		for(int j = 0; j < w; j++) {
 			//float pixel = curKinect.at<float>(y, j);
 			//float pixel = currentDepthImage.getColor(j, y).getBrightness(); //replace with saved format
 			float pixel = currentDepthImage[i];
-			if(pixel < 1000) { // the rest is basically noise
-				int x = Xres - j - 1; // x axis is flipped from depth image
-				float z = rawToCentimeters(pixel);
-				
-				float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
-				float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
-				
-				// add each point into pointCloud
-				pointCloud.push_back(Point3f(xReal, yReal, z));
-			}									
+			//if(pixel < 1000) { // the rest is basically noise
+			int x = Xres - j - 1; // x axis is flipped from depth image
+			float z;
+			if(pixel < 1000){ // the rest is basically noise
+				z = rawToCentimeters(pixel);
+			}
+			else{
+				z = 0;
+			}	
+			
+			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
+			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
+			
+			// add each point into pointCloud
+			pointCloud.push_back(Point3f(xReal, yReal, z));
+			center += ofVec3f(xReal, yReal, z);
+			
 			i++;
 		}
-	}	
+	}
+	
+	//cout << " i ended up at " << i << endl;
+	
+	meshCenter = center / i;
+
+	meshDistance = 0;
+	for(i = 0; i < pointCloud.size(); i++){
+		float thisDistance = center.distance(ofVec3f(pointCloud[i].x,
+													 pointCloud[i].y,
+													 pointCloud[i].z));
+		if(thisDistance > meshDistance){
+			meshDistance = thisDistance;
+		}
+	}
+	cout << "mesh center " << meshCenter << " distance " << meshDistance << endl; 
 }
 
 void ofxDepthRGBAlignment::updateColors() {
@@ -146,7 +235,15 @@ void ofxDepthRGBAlignment::updateColors() {
 	// rotate, translate the points to fit the colorCalibration perspective
 	// and project them onto the colorCalibration image space
 	// and undistort them
-	projectPoints(Mat(pointCloud),
+	Mat pcMat = Mat(pointCloud);
+	
+	//cout << "PC " << pcMat << endl;
+//	cout << "Rot Depth->Color " << rotationDepthToColor << endl;
+//	cout << "Trans Depth->Color " << translationDepthToColor << endl;
+//	cout << "Intrs Cam " << colorCalibration.getDistortedIntrinsics().getCameraMatrix() << endl;
+//	cout << "Intrs Dist Coef " << colorCalibration.getDistCoeffs() << endl;
+	
+	projectPoints(pcMat,
 				  rotationDepthToColor, translationDepthToColor,
 				  colorCalibration.getDistortedIntrinsics().getCameraMatrix(),
 				  colorCalibration.getDistCoeffs(),
@@ -161,15 +258,27 @@ void ofxDepthRGBAlignment::updateColors() {
 	unsigned char* pixels = currentColorImage.getPixels();
 	for(int i = 0; i < imagePoints.size(); i++) {
 		int j = (int) imagePoints[i].y * w + (int) imagePoints[i].x;
+		pointCloudColors.push_back(Point3f(1, 1, 1));
+		/*
 		if(j < 0 || j >= n) {
 			pointCloudColors.push_back(Point3f(1, 1, 1));
 		} else {
 			j *= 3;
 			pointCloudColors.push_back(Point3f(pixels[j + 0] / 255.f, pixels[j + 1] / 255.f, pixels[j + 2] / 255.f));
 		}
+		 */
 	}
 }
-	
+
+
+ofVec3f ofxDepthRGBAlignment::getMeshCenter(){
+	return meshCenter;
+}
+
+float ofxDepthRGBAlignment::getMeshDistance(){
+	return meshDistance;
+}
+
 void ofxDepthRGBAlignment::drawMesh() {
 
 }
@@ -193,5 +302,11 @@ void ofxDepthRGBAlignment::drawPointCloud() {
 	glVertexPointer(2, GL_FLOAT, sizeof(Point2f), &(imagePoints[0].x));
 	glDrawArrays(GL_POINTS, 0, pointCloud.size());
 	glDisableClientState(GL_VERTEX_ARRAY);	
+	if(depthCalibration.isReady()){
+		depthCalibration.draw3d();
+	}
+	if(colorCalibration.isReady()){
+		colorCalibration.draw3d();
+	}
 }
 
