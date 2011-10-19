@@ -1,19 +1,36 @@
 #include "testApp.h"
 
+testApp::testApp()
+: kinectView("Kinect View", kinect.getTextureReference()),
+  cameraView("Color View", grayCopy)
+
+{
+	
+}
+
 //--------------------------------------------------------------
 void testApp::setup(){
+
+	ofEnableAlphaBlending();
+	ofSetFrameRate(60);
 	
 	kinect.init(true, true, true);
 	kinect.open();
 	
-
 	rgbcamera.setDeviceID(8);
 	rgbcamera.initGrabber(640, 480);
 	
-	kinectCheckerPreview.setup();
-	rgbCheckerPreview.setup();
+	kinectCheckerPreview.setup(10,7,4);
+	cameraCheckerPreview.setup(10,7,4);
 	
 	depthRGBAlignment.setup();
+	
+	gui.init(mainScreen);
+	mainScreen.push(kinectView);
+	mainScreen.push(cameraView);
+	
+	ofAddListener(kinectView.evtDraw, this, &testApp::drawOnKinect);
+	ofAddListener(cameraView.evtDraw, this, &testApp::drawOnCamera);
 }
 
 //--------------------------------------------------------------
@@ -32,7 +49,7 @@ void testApp::update(){
 //		depthRGBAlignment.setColorImage( rgbcamera.getPixelsRef() );
 		grayCopy.setFromPixels(rgbcamera.getPixelsRef());
 		grayCopy.setImageType(OF_IMAGE_GRAYSCALE);
-		rgbCheckerPreview.setTestImage( grayCopy.getPixelsRef() );
+		cameraCheckerPreview.setTestImage( grayCopy.getPixelsRef() );		
 		isupdated = true;
 	}
 	
@@ -45,10 +62,17 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	depthRGBAlignment.drawPointCloud();
-	kinect.draw(0, 0);
-	grayCopy.draw(640, 0);
-	kinectCheckerPreview.draw(ofVec2f(0,0));
-	rgbCheckerPreview.draw(ofVec2f(640,0));
+//	grayCopy.draw(640, 0);
+//	rgbCheckerPreview.draw(ofVec2f(640,0));
+}
+
+void testApp::drawOnKinect(ofRectangle& drawRect){
+//	kinect.draw(0, 0);
+	kinectCheckerPreview.draw(drawRect);	
+}
+
+void testApp::drawOnCamera(ofRectangle& drawRect){
+	cameraCheckerPreview.draw(drawRect);
 }
 
 //--------------------------------------------------------------

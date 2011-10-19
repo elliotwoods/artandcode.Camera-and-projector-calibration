@@ -5,12 +5,16 @@
 #include "ofxKinect.h"
 #include "ofxCvCheckerboardPreview.h"
 
+#include "ofxCVgui.h"
+
 using namespace ofxCv;
 using namespace cv;
 
 class testApp : public ofBaseApp{
 
   public:
+	testApp();
+	
 	void setup();
 	void update();
 	void draw();
@@ -26,10 +30,18 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 	
 	ofxCvCheckerboardPreview kinectCheckerPreview;
-	ofxCvCheckerboardPreview rgbCheckerPreview;
+	ofxCvCheckerboardPreview cameraCheckerPreview;
 	ofxDepthRGBAlignment depthRGBAlignment;		
 	ofImage grayCopy;
 	ofVideoGrabber rgbcamera;
 	ofxKinect kinect;
+
+	ofxCVgui gui;
+	scrGroupGrid mainScreen;
+	scrDraw2D kinectView;
+	scrDraw2D cameraView;
+	void drawOnKinect(ofRectangle& drawRect);
+	void drawOnCamera(ofRectangle& drawRect);
+
 	
 };

@@ -34,12 +34,11 @@ class ofxDepthRGBAlignment {
 
 	void drawMesh();
 	void drawPointCloud();
-	
+		
   protected:
 	bool hasDepthImage;
 	bool hasColorImage;
 	ofPixels currentColorImage;
-	//ofShortPixels currentDepthImage;
 	unsigned short* currentDepthImage;
 	
 	void updatePointCloud();
