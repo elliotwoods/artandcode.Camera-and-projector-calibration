@@ -4,10 +4,10 @@
 #include "ofxDepthRGBAlignment.h"
 #include "ofxKinect.h"
 #include "ofxCvCheckerboardPreview.h"
-#include "ofxGameCamera.h"
 
 #include "ofxCVgui.h"
 #include "scrGameView3D.h"
+#include "ofxEdsdk.h"
 
 using namespace ofxCv;
 using namespace cv;
@@ -15,7 +15,6 @@ using namespace cv;
 class testApp : public ofBaseApp{
 
   public:
-//	testApp();
 	
 	void setup();
 	void update();
@@ -35,19 +34,20 @@ class testApp : public ofBaseApp{
 	ofxCvCheckerboardPreview kinectCheckerPreview;
 	ofxCvCheckerboardPreview cameraCheckerPreview;
 	ofxDepthRGBAlignment depthRGBAlignment;		
+	
+
 	ofImage grayCopy;
 	ofVideoGrabber rgbcamera;
+	ofxEdsdk::Camera slr;
 	ofxKinect kinect;
-
-	ofxGameCamera gamecam;
-	ofCamera cam;
 	
 	ofxCVgui* gui;
-	scrGroupGrid* mainScreen;
+	scrGroupTabbed* mainScreen;
+	scrGroupGrid* calibrate;
+	scrGroupGrid* preview;
 	scrDraw2D* kinectView;
 	scrDraw2D* depthView;
 	scrDraw2D* cameraView;
-//	scrDraw3D* pointcloudView;
 	scrGameView3D* pointcloudView;
 	ofNode pointcloudNode;
 	

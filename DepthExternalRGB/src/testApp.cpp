@@ -1,11 +1,7 @@
 #include "testApp.h"
 
-//testApp::testApp()
-//{
-//	
-//}
-
 //--------------------------------------------------------------
+
 void testApp::setup(){
 
 	ofEnableAlphaBlending();
@@ -14,9 +10,10 @@ void testApp::setup(){
 	kinect.init(true);
 	kinect.setVerbose(true);
 	kinect.open();
-	
-	rgbcamera.setDeviceID(8);
-	rgbcamera.initGrabber(640, 480);
+
+	slr.setup();
+//	rgbcamera.setDeviceID(8);
+//	rgbcamera.initGrabber(640, 480);
 	
 	kinectCheckerPreview.setup(10,7,4);
 	cameraCheckerPreview.setup(10,7,4);
@@ -27,11 +24,18 @@ void testApp::setup(){
 	depthView  = new scrDraw2D("Depth View", kinect.getDepthTextureReference());
 	pointcloudView = new scrGameView3D("Point Cloud", "PointCamera.xml");
 	
-	mainScreen = new scrGroupGrid();
-	mainScreen->push(kinectView);
-	mainScreen->push(cameraView);
-	mainScreen->push(depthView);
-	mainScreen->push(pointcloudView);
+	mainScreen = new scrGroupTabbed("", 32);
+	
+	calibrate = new scrGroupGrid("Calibrate");
+	calibrate->push(kinectView);
+	calibrate->push(cameraView);
+	calibrate->push(depthView);
+	
+	preview = new scrGroupGrid("Preview");
+	preview->push(pointcloudView);
+	
+	mainScreen->push(calibrate);
+	mainScreen->push(preview);
 	
 	ofAddListener(kinectView->evtDraw, this, &testApp::drawOnKinect);
 	ofAddListener(cameraView->evtDraw, this, &testApp::drawOnCamera);
@@ -39,12 +43,6 @@ void testApp::setup(){
 	gui = new ofxCVgui();
 	gui->init(*mainScreen);
 
-	gamecam.speed = 5;
-	gamecam.usemouse = true;
-	gamecam.autosavePosition = true;
-
-	//gamecam.setScale(ofVec3f(1,-1,1));
-	gamecam.loadCameraPosition();
 	
 }
 
@@ -54,11 +52,25 @@ void testApp::update(){
 	bool isupdated = false;
 	kinect.update();
 	if(kinect.isFrameNew()){
-		depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );
-		kinectCheckerPreview.setTestImage(kinect.getPixelsRef());
+		if(mainScreen->iSelection == 0){
+			kinectCheckerPreview.setTestImage(kinect.getPixelsRef());
+		}
+		else {
+			depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );		
+			/*
+			vector<Point3f> newpoints;
+			for(int y = 0; y < kinect.getHeight(); y++){
+				for(int x = 0; x < kinect.getWidth(); x++){
+					newpoints.push_back(toCv(kinect.getWorldCoordinateAt(x, y)));
+				}
+			}
+			depthRGBAlignment.setPoinCloud(newpoints);
+			 */
+		}
 		isupdated = true;
 	}
-	
+
+	/*
 	rgbcamera.update();
 	if(rgbcamera.isFrameNew()){
 		depthRGBAlignment.setColorImage( rgbcamera.getPixelsRef() );
@@ -67,8 +79,23 @@ void testApp::update(){
 		cameraCheckerPreview.setTestImage( grayCopy.getPixelsRef() );		
 		isupdated = true;
 	}
+	*/
 	
-	if(isupdated){
+	slr.update();
+	if(slr.isFrameNew()) {
+//		cout << " new frame" << endl;
+		if(mainScreen->iSelection == 0){
+			grayCopy.setFromPixels( slr.getLivePixels() );
+			grayCopy.setImageType(OF_IMAGE_GRAYSCALE);
+			cameraCheckerPreview.setTestImage( grayCopy.getPixelsRef() );		
+		}
+		else{
+			depthRGBAlignment.setColorImage( slr.getLivePixels() );
+		}
+		isupdated = true;		
+	}
+	
+	if(isupdated && mainScreen->iSelection == 1){
 		depthRGBAlignment.update();
 		pointcloudNode.setPosition(depthRGBAlignment.getMeshCenter());
 	}
@@ -77,9 +104,6 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	//cam.setPosition(depthRGBAlignment.getMeshCenter() + ofVec3f(0,0,1) * (depthRGBAlignment.getMeshDistance() + ofGetMouseX()) );
-	//cam.lookAt(depthRGBAlignment.getMeshCenter(), ofVec3f(0,1,0));
-	
 }
 
 void testApp::drawOnKinect(ofRectangle& drawRect){
@@ -91,18 +115,7 @@ void testApp::drawOnCamera(ofRectangle& drawRect){
 }
 
 void testApp::drawOnPoint(ofNode& drawNode){
-	//	cam.begin();
-	//gamecam.begin(drawRect);
-	
 	depthRGBAlignment.drawPointCloud();
-//	ofPushStyle();
-//	ofSetColor(255, 0, 0);
-//	ofBox(pointcloudNode.getPosition(), 2);
-//	ofPopStyle();
-	
-	//cam.end();
-	//gamecam.end();
-	
 }
 
 //--------------------------------------------------------------

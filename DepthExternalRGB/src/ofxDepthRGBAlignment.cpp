@@ -40,7 +40,6 @@ void ofxDepthRGBAlignment::setup(int squaresWide, int squaresTall, int squareSiz
 	
 	colorCalibration.setPatternSize(squaresWide, squaresTall);
 	colorCalibration.setSquareSize(squareSize);
-
 }
 
 //-----------------------------------------------
@@ -103,8 +102,6 @@ void ofxDepthRGBAlignment::saveCalibration() {
 void ofxDepthRGBAlignment::loadCalibration() {
 	depthCalibration.load("depthCalib.yml");
 	colorCalibration.load("colorCalib.yml");
-//	depthCalibration.calibrate();
-//	colorCalibration.calibrate();
 	
 	depthCalibration.getTransformation(colorCalibration, rotationDepthToColor, translationDepthToColor);
 	colorCalibration.getTransformation(depthCalibration, rotationColorToDepth, translationColorToDepth);
@@ -151,11 +148,7 @@ void ofxDepthRGBAlignment::update() {
 	if(colorCalibration.isReady() && depthCalibration.isReady()){
 		updatePointCloud();
 		updateColors();
-	}
-	else {
-		//cout << "unready update" << endl;
-	}
-		
+	}		
 }
 
 void ofxDepthRGBAlignment::updatePointCloud() {
@@ -181,29 +174,12 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 	//	float* pixels = curKinect.getPixels();
 	
 	int validPointCount = 0;
-	
-	/*
-	 principalPoint.x += ofMap(mouseX, 0, ofGetWidth(), -4, 4);
-	 principalPoint.y += ofMap(mouseY, 0, ofGetHeight(), -4, 4);
-	 cout << "fudge: " << ofMap(mouseX, 0, ofGetWidth(), -4, 4) << "x" << ofMap(mouseY, 0, ofGetHeight(), -4, 4) << endl;
-	 */
 	ofVec3f center(0,0,0);
-	
 	for(int y = 0; y < h; y++) {
 		for(int j = 0; j < w; j++) {
-			//float pixel = curKinect.at<float>(y, j);
-			//float pixel = currentDepthImage.getColor(j, y).getBrightness(); //replace with saved format
 			float pixel = currentDepthImage[y*w+j];
-			//if(pixel < 1000) { // the rest is basically noise
-			//int x = Xres - j - 1; // x axis is flipped from depth image
 			int x = j;
-			float z;
-			if(pixel < 1000){ // the rest is basically noise
-				z = rawToCentimeters(pixel);
-			}
-			else{
-				z = 0;
-			}	
+			float z = rawToCentimeters(pixel);
 			
 			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
 			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
@@ -220,7 +196,6 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 	//cout << " i ended up at " << i << endl;
 	
 	meshCenter = center / validPointCount;
-
 	meshDistance = 0;
 	for(int i = 0; i < pointCloud.size(); i++){
 		float thisDistance = center.distance(ofVec3f(pointCloud[i].x,
@@ -230,7 +205,16 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 			meshDistance = thisDistance;
 		}
 	}
+
 //	cout << "mesh center " << meshCenter << " distance " << meshDistance << endl; 
+}
+
+void ofxDepthRGBAlignment::setPoinCloud(vector<Point3f>& newCloud){
+//	pointCloud.clear();
+//	for(int i = 0; i < newCloud.size(); i++){
+//		pointCloud.push_back( toCv(newCloud[i]) );
+//	}
+	pointCloud = newCloud;
 }
 
 void ofxDepthRGBAlignment::updateColors() {
@@ -262,13 +246,15 @@ void ofxDepthRGBAlignment::updateColors() {
 	unsigned char* pixels = currentColorImage.getPixels();
 	for(int i = 0; i < imagePoints.size(); i++) {
 		int j = (int) imagePoints[i].y * w + (int) imagePoints[i].x;
-		//pointCloudColors.push_back(Point3f(1, 0, 1));
+		//pointCloudColors.push_back(Point3f(1, 1, 1));
+		
 		if(j < 0 || j >= n) {
 			pointCloudColors.push_back(Point3f(1, 0, 0));
 		} else {
 			j *= 3;
 			pointCloudColors.push_back(Point3f(pixels[j + 0] / 255.f, pixels[j + 1] / 255.f, pixels[j + 2] / 255.f));
 		}
+		
 	}
 }
 
@@ -294,6 +280,7 @@ void ofxDepthRGBAlignment::drawPointCloud() {
 	glPushMatrix();
 	glScaled(1, -1, 1);
 	
+	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glColorPointer(3, GL_FLOAT, sizeof(Point3f), &(pointCloudColors[0].x));

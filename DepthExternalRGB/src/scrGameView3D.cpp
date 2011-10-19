@@ -17,7 +17,7 @@ scrGameView3D::scrGameView3D(string caption, string cameraPositionFile)
 	//ofAddListener(ofEvents.keyPressed, this, &scrDraw3D::keyPressed);
 //	camera.setDistance(1.0f);
 	camera.setNearClip(0.01f);
-	camera.speed = 5;
+	camera.speed = 15;
 	camera.autosavePosition = true;
 	camera.useArrowKeys = false;
 	camera.cameraPositionFile = cameraPositionFile;
