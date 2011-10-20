@@ -35,8 +35,9 @@ class testApp : public ofBaseApp{
 	ofxCvCheckerboardPreview cameraCheckerPreview;
 	ofxDepthRGBAlignment depthRGBAlignment;		
 	
-
-	ofImage grayCopy;
+	ofImage grayscaleKinectCamera;
+	ofImage colorExternalCamera;
+	ofImage grayscaleExternalCamera;
 	ofVideoGrabber rgbcamera;
 	ofxEdsdk::Camera slr;
 	ofxKinect kinect;

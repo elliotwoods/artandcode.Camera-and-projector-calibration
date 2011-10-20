@@ -7,7 +7,8 @@ void testApp::setup(){
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
 	
-	kinect.init(true);
+	kinect.setUseRegistration(true);
+	kinect.init(false);
 	kinect.setVerbose(true);
 	kinect.open();
 
@@ -19,8 +20,11 @@ void testApp::setup(){
 	cameraCheckerPreview.setup(10,7,4);
 	depthRGBAlignment.setup(10,7,4);
 	
-	kinectView = new scrDraw2D("Kinect View", kinect.getTextureReference());
-	cameraView = new scrDraw2D("Camera View", grayCopy);
+	grayscaleExternalCamera.allocate(10, 10, OF_IMAGE_GRAYSCALE);
+	grayscaleKinectCamera.allocate(10, 10, OF_IMAGE_GRAYSCALE);
+	
+	kinectView = new scrDraw2D("Kinect View", grayscaleKinectCamera);
+	cameraView = new scrDraw2D("Camera View", grayscaleExternalCamera);
 	depthView  = new scrDraw2D("Depth View", kinect.getDepthTextureReference());
 	pointcloudView = new scrGameView3D("Point Cloud", "PointCamera.xml");
 	
@@ -48,24 +52,50 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-	
+
 	bool isupdated = false;
+	
+	slr.update();
+	if(slr.isFrameNew()) {
+		
+		if(mainScreen->iSelection == 0){
+			grayscaleExternalCamera.setFromPixels( slr.getLivePixels() );
+			grayscaleExternalCamera.setImageType(OF_IMAGE_GRAYSCALE);
+			cameraCheckerPreview.setTestImage( grayscaleExternalCamera.getPixelsRef() );		
+		}
+		else{
+			ofPixelsRef pix = slr.getLivePixels();
+			colorExternalCamera.setFromPixels(pix.getPixels(), pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);
+			depthRGBAlignment.setColorImage( colorExternalCamera );
+		}
+		isupdated = true;		
+	}
+	
 	kinect.update();
 	if(kinect.isFrameNew()){
 		if(mainScreen->iSelection == 0){
-			kinectCheckerPreview.setTestImage(kinect.getPixelsRef());
+			ofPixelsRef p = kinect.getPixelsRef();
+//			cout << " kinect size is " << p.getWidth() << " " << p.getHeight() << endl;
+			grayscaleKinectCamera.setFromPixels( kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR );
+			grayscaleKinectCamera.setImageType(OF_IMAGE_GRAYSCALE);
+			kinectCheckerPreview.setTestImage(grayscaleKinectCamera.getPixelsRef());
 		}
 		else {
-			depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );		
-			/*
+			//depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );
 			vector<Point3f> newpoints;
 			for(int y = 0; y < kinect.getHeight(); y++){
 				for(int x = 0; x < kinect.getWidth(); x++){
-					newpoints.push_back(toCv(kinect.getWorldCoordinateAt(x, y)));
+					float color = kinect.getPixelsRef().getColor(x, y).getBrightness();
+					if(color != 0){
+						ofVec3f worldp = kinect.getWorldCoordinateAt(x, y);
+						newpoints.push_back(toCv(worldp));
+					}
+					else{
+						newpoints.push_back(toCv(ofVec3f(0,0,0)));
+					}
 				}
 			}
-			depthRGBAlignment.setPoinCloud(newpoints);
-			 */
+			depthRGBAlignment.setPointCloud(newpoints);
 		}
 		isupdated = true;
 	}
@@ -81,29 +111,18 @@ void testApp::update(){
 	}
 	*/
 	
-	slr.update();
-	if(slr.isFrameNew()) {
-//		cout << " new frame" << endl;
-		if(mainScreen->iSelection == 0){
-			grayCopy.setFromPixels( slr.getLivePixels() );
-			grayCopy.setImageType(OF_IMAGE_GRAYSCALE);
-			cameraCheckerPreview.setTestImage( grayCopy.getPixelsRef() );		
-		}
-		else{
-			depthRGBAlignment.setColorImage( slr.getLivePixels() );
-		}
-		isupdated = true;		
-	}
-	
 	if(isupdated && mainScreen->iSelection == 1){
 		depthRGBAlignment.update();
-		pointcloudNode.setPosition(depthRGBAlignment.getMeshCenter());
+		//pointcloudNode.setPosition(depthRGBAlignment.getMeshCenter());
 	}
 	
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+//	slr.update();
+//	slr.draw(0, 0);
+
 }
 
 void testApp::drawOnKinect(ofRectangle& drawRect){
@@ -115,13 +134,14 @@ void testApp::drawOnCamera(ofRectangle& drawRect){
 }
 
 void testApp::drawOnPoint(ofNode& drawNode){
-	depthRGBAlignment.drawPointCloud();
+	//depthRGBAlignment.drawPointCloud();
+	depthRGBAlignment.drawMesh();
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	if(key == ' '){
-		depthRGBAlignment.addCalibrationImagePair(kinect.getPixelsRef(), grayCopy.getPixelsRef());
+		depthRGBAlignment.addCalibrationImagePair(grayscaleKinectCamera.getPixelsRef(), grayscaleExternalCamera.getPixelsRef());
 	}
 	
 	if(key == 's'){

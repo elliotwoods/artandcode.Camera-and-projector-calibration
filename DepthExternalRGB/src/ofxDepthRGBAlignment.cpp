@@ -9,15 +9,15 @@
 
 #include "ofxDepthRGBAlignment.h"
 
-const float
-k1 = 0.1236,
-k2 = 2842.5,
-k3 = 1.1863,
-k4 = 0.0370;
-
-static float rawToCentimeters(float raw) {
-	return 100 * (k1 * tan((raw / k2) + k3) - k4);
-}
+//const float
+//k1 = 0.1236,
+//k2 = 2842.5,
+//k3 = 1.1863,
+//k4 = 0.0370;
+//
+//static float rawToCentimeters(float raw) {
+//	return 100 * (k1 * tan((raw / k2) + k3) - k4);
+//}
 
 ofxDepthRGBAlignment::ofxDepthRGBAlignment() {
 	
@@ -40,6 +40,21 @@ void ofxDepthRGBAlignment::setup(int squaresWide, int squaresTall, int squareSiz
 	
 	colorCalibration.setPatternSize(squaresWide, squaresTall);
 	colorCalibration.setSquareSize(squareSize);
+	
+	mesh.setUsage(GL_STREAM_DRAW);
+	int width = 640;
+	int height = 480;
+	for (int y = 0; y < height; y++){
+		for (int x = 0; x < width; x++){
+			mesh.addVertex(ofPoint(x,y,0));	// mesh index = x + y*width
+			// this replicates the pixel array within the camera bitmap...
+			//mesh.addColor(ofFloatColor(0,0,0));  // placeholder for colour data, we'll get this from the camera
+			mesh.addTexCoord(ofVec2f(0,0));
+			mesh.addColor(ofFloatColor(0,0,0));
+		}
+	}
+	
+	
 }
 
 //-----------------------------------------------
@@ -99,12 +114,14 @@ void ofxDepthRGBAlignment::saveCalibration() {
 	depthCalibration.save("depthCalib.yml");	
 	colorCalibration.save("colorCalib.yml");
 }
+
 void ofxDepthRGBAlignment::loadCalibration() {
 	depthCalibration.load("depthCalib.yml");
 	colorCalibration.load("colorCalib.yml");
 	
 	depthCalibration.getTransformation(colorCalibration, rotationDepthToColor, translationDepthToColor);
 	colorCalibration.getTransformation(depthCalibration, rotationColorToDepth, translationColorToDepth);
+	
 	cout << "Kinect to Color:" << endl << rotationDepthToColor << endl << translationDepthToColor << endl;
 	cout << "Color to Kinect:" << endl << rotationColorToDepth << endl << translationColorToDepth << endl;
 
@@ -131,7 +148,7 @@ void ofxDepthRGBAlignment::saveCalibration(Calibration& from, Calibration& to, s
 
 //-----------------------------------------------
 
-void ofxDepthRGBAlignment::setColorImage(ofPixels& colorImage) {
+void ofxDepthRGBAlignment::setColorImage(ofImage& colorImage) {
 	currentColorImage = colorImage;
 	hasColorImage = true;
 }
@@ -146,12 +163,15 @@ void ofxDepthRGBAlignment::setDepthImage(unsigned short* depthImage) {
 void ofxDepthRGBAlignment::update() {
 
 	if(colorCalibration.isReady() && depthCalibration.isReady()){
-		updatePointCloud();
-		updateColors();
+//		updatePointCloud();
+//		cout << "PP " << depthCalibration.getUndistortedIntrinsics().getPrincipalPoint() << endl;
+//		updateColors();
+//		updateMesh();
 	}		
 }
 
 void ofxDepthRGBAlignment::updatePointCloud() {
+	/*
 	pointCloud.clear();
 	
 	const unsigned int Xres = 640;
@@ -207,17 +227,92 @@ void ofxDepthRGBAlignment::updatePointCloud() {
 	}
 
 //	cout << "mesh center " << meshCenter << " distance " << meshDistance << endl; 
+	 */
+	
 }
 
-void ofxDepthRGBAlignment::setPoinCloud(vector<Point3f>& newCloud){
+void ofxDepthRGBAlignment::updateMesh() {
+	
+	Mat pcMat = Mat(pointCloud);
+	
+	//cout << "PC " << pcMat << endl;
+	//	cout << "Rot Depth->Color " << rotationDepthToColor << endl;
+	//	cout << "Trans Depth->Color " << translationDepthToColor << endl;
+	//	cout << "Intrs Cam " << colorCalibration.getDistortedIntrinsics().getCameraMatrix() << endl;
+	//	cout << "Intrs Dist Coef " << colorCalibration.getDistCoeffs() << endl;
+	
+	imagePoints.clear();
+	projectPoints(pcMat,
+				  rotationDepthToColor, translationDepthToColor,
+				  colorCalibration.getDistortedIntrinsics().getCameraMatrix(),
+				  colorCalibration.getDistCoeffs(),
+				  imagePoints);
+	
+	int w = 640;
+	int h = 480;
+	int n = w * h;
+//	unsigned char* pixels = currentColorImage.getPixels();
+	for(int i = 0; i < imagePoints.size(); i++) {
+		ofVec2f textureCoord = ofVec2f(imagePoints[i].x,imagePoints[i].y);
+		
+//		int j = (int)imagePoints[i].y * w + (int) imagePoints[i].x;
+//		ofFloatColor color;
+//		if(j < 0 || j >= n) {
+//			color = ofFloatColor(1, 0, 0);
+//		}
+//		else {
+//			j *= 3;
+//			color = ofFloatColor(pixels[j + 0] / 255.f, pixels[j + 1] / 255.f, pixels[j + 2] / 255.f);
+//		}
+		
+		int j = (int)imagePoints[i].y * currentColorImage.getWidth() + (int) imagePoints[i].x;
+		ofFloatColor color;
+		color = ofFloatColor(1, 1, 1, 1);		
+		mesh.setColor(i, color);
+		mesh.setTexCoord(i, textureCoord);
+		mesh.setVertex(i, toOf(pointCloud[i]));
+	}
+	int facesAdded = 0;
+	mesh.clearIndices();
+	for (int y = 0; y < h-1; y++){
+		for (int x=0; x < w-1; x++){
+			if(pointCloud[x+y*w].z != 0 &&
+			   pointCloud[(x+1)+y*w].z != 0 &&
+			   pointCloud[x+(y+1)*w].z != 0)
+			{
+				mesh.addIndex(x+y*w);				// 0
+				mesh.addIndex((x+1)+y*w);			// 1
+				mesh.addIndex(x+(y+1)*w);			// 10				
+				facesAdded++;
+			}
+			
+			if(pointCloud[(x+1)+y*w].z != 0 &&
+			   pointCloud[x+(y+1)*w].z != 0 &&
+			   pointCloud[(x+1)+(y+1)*w].z != 0)
+			{
+				mesh.addIndex((x+1)+y*w);			// 1
+				mesh.addIndex(x+(y+1)*w);			// 10
+				mesh.addIndex((x+1)+(y+1)*w);		// 11
+				facesAdded++;
+			}
+		}
+	}
+	cout << "faces added " << facesAdded << endl;
+}
+
+void ofxDepthRGBAlignment::setPointCloud(vector<Point3f>& newCloud){
 //	pointCloud.clear();
 //	for(int i = 0; i < newCloud.size(); i++){
 //		pointCloud.push_back( toCv(newCloud[i]) );
 //	}
 	pointCloud = newCloud;
+	if(colorCalibration.isReady() && depthCalibration.isReady()){
+		updateMesh();
+	}
 }
 
 void ofxDepthRGBAlignment::updateColors() {
+	/*
 	pointCloudColors.clear();
 	imagePoints.clear();
 
@@ -247,15 +342,14 @@ void ofxDepthRGBAlignment::updateColors() {
 	for(int i = 0; i < imagePoints.size(); i++) {
 		int j = (int) imagePoints[i].y * w + (int) imagePoints[i].x;
 		//pointCloudColors.push_back(Point3f(1, 1, 1));
-		
 		if(j < 0 || j >= n) {
 			pointCloudColors.push_back(Point3f(1, 0, 0));
 		} else {
 			j *= 3;
 			pointCloudColors.push_back(Point3f(pixels[j + 0] / 255.f, pixels[j + 1] / 255.f, pixels[j + 2] / 255.f));
 		}
-		
 	}
+	 */
 }
 
 
@@ -268,6 +362,16 @@ float ofxDepthRGBAlignment::getMeshDistance(){
 }
 
 void ofxDepthRGBAlignment::drawMesh() {
+	glPushMatrix();
+	glScaled(1, -1, 1);
+
+	glEnable(GL_DEPTH_TEST);
+	currentColorImage.getTextureReference().bind();
+	mesh.drawFaces();
+	currentColorImage.getTextureReference().unbind();
+	glDisable(GL_DEPTH_TEST);
+	
+	glPopMatrix();
 
 }
 

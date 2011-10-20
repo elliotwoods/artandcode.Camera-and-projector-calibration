@@ -28,7 +28,7 @@ class ofxDepthRGBAlignment {
 //	void saveCalibration(string filename);
 
 	//Display of dat
-	void setColorImage(ofPixels& colorImage);
+	void setColorImage(ofImage& colorImage);
 	void setDepthImage(unsigned short* pixels);
 	void update(); //updates current mesh
 
@@ -38,21 +38,25 @@ class ofxDepthRGBAlignment {
 	void saveCalibration();
 	void loadCalibration();
 	void resetCalibration();
-	void setPoinCloud(vector<Point3f>& newCloud);
+	void setPointCloud(vector<Point3f>& newCloud);
 	
 	ofVec3f getMeshCenter();
 	float getMeshDistance();
-	
   protected:
 	bool hasDepthImage;
 	bool hasColorImage;
 	bool hasPointCloud;
 	
-	ofPixels currentColorImage;
+//	vector<ofIndexType> indeces;
+//	vector<ofVec2f> texcoords;
+//	vector<ofVec3f> vertices;
+	
+	ofImage currentColorImage;
 	unsigned short* currentDepthImage;
 	
 	void updatePointCloud();
 	void updateColors();
+	void updateMesh();
 	
 	//TEMP until we convert to mesh
 	vector<Point2f> imagePoints;
