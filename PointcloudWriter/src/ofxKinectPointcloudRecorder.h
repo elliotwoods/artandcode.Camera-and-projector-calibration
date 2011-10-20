@@ -21,13 +21,10 @@ class ofxKinectPointcloudRecorder : ofThread {
 	ofxKinectPointcloudRecorder();
 	void setup();
 	void setRecordLocation(string directory, string filePrefix);
-	
 	void addImage(unsigned short* image);
 	
-	vector<ofVec3f> readPointcloud(string filename);
-	vector<ofVec3f> readPointcloud(ofFile file);
-	
-	ofxKinect* kinect;
+	unsigned short* readDepthFrame(string filename);
+	unsigned short* readDepthFrame(ofFile file);
 
   protected:
 	void threadedFunction();

@@ -13,6 +13,7 @@ void testApp::setup(){
 	kinect.open();
 
 	slr.setup();
+	
 //	rgbcamera.setDeviceID(8);
 //	rgbcamera.initGrabber(640, 480);
 	
@@ -56,8 +57,8 @@ void testApp::update(){
 	bool isupdated = false;
 	
 	slr.update();
-	if(slr.isFrameNew()) {
-		
+	if(false && slr.isFrameNew()) {
+		cout << "new frame! "<< endl;
 		if(mainScreen->iSelection == 0){
 			grayscaleExternalCamera.setFromPixels( slr.getLivePixels() );
 			grayscaleExternalCamera.setImageType(OF_IMAGE_GRAYSCALE);
@@ -71,6 +72,7 @@ void testApp::update(){
 		isupdated = true;		
 	}
 	
+	return;
 	kinect.update();
 	if(kinect.isFrameNew()){
 		if(mainScreen->iSelection == 0){
@@ -82,20 +84,7 @@ void testApp::update(){
 		}
 		else {
 			//depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );
-			vector<Point3f> newpoints;
-			for(int y = 0; y < kinect.getHeight(); y++){
-				for(int x = 0; x < kinect.getWidth(); x++){
-					float color = kinect.getPixelsRef().getColor(x, y).getBrightness();
-					if(color != 0){
-						ofVec3f worldp = kinect.getWorldCoordinateAt(x, y);
-						newpoints.push_back(toCv(worldp));
-					}
-					else{
-						newpoints.push_back(toCv(ofVec3f(0,0,0)));
-					}
-				}
-			}
-			depthRGBAlignment.setPointCloud(newpoints);
+			depthRGBAlignment.updatePointCloud(kinect);
 		}
 		isupdated = true;
 	}

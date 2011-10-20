@@ -41,7 +41,7 @@ class testApp : public ofBaseApp{
 	ofVideoGrabber rgbcamera;
 	ofxEdsdk::Camera slr;
 	ofxKinect kinect;
-	
+	bool kinectStarted;
 	ofxCVgui* gui;
 	scrGroupTabbed* mainScreen;
 	scrGroupGrid* calibrate;

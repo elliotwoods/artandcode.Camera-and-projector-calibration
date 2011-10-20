@@ -9,15 +9,15 @@
 
 #include "ofxRGBDAlignment.h"
 
-//const float
-//k1 = 0.1236,
-//k2 = 2842.5,
-//k3 = 1.1863,
-//k4 = 0.0370;
-//
-//static float rawToCentimeters(float raw) {
-//	return 100 * (k1 * tan((raw / k2) + k3) - k4);
-//}
+const float
+k1 = 0.1236,
+k2 = 2842.5,
+k3 = 1.1863,
+k4 = 0.0370;
+
+static float rawToCentimeters(float raw) {
+	return 100 * (k1 * tan((raw / k2) + k3) - k4);
+}
 
 ofxRGBDAlignment::ofxRGBDAlignment() {
 	
@@ -53,8 +53,6 @@ void ofxRGBDAlignment::setup(int squaresWide, int squaresTall, int squareSize) {
 			mesh.addColor(ofFloatColor(0,0,0));
 		}
 	}
-	
-	
 }
 
 //-----------------------------------------------
@@ -170,7 +168,56 @@ void ofxRGBDAlignment::update() {
 	}		
 }
 
-void ofxRGBDAlignment::updatePointCloud() {
+void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
+	
+	////METHOD 1 custom cloud
+	
+	pointCloud.clear();
+	
+
+	Point2d fov = depthCalibration.getUndistortedIntrinsics().getFov();
+	float fx = tanf(ofDegToRad(fov.x) / 2) * 2;
+	float fy = tanf(ofDegToRad(fov.y) / 2) * 2;
+	
+	Point2d principalPoint = depthCalibration.getUndistortedIntrinsics().getPrincipalPoint();
+	cv::Size imageSize = depthCalibration.getUndistortedIntrinsics().getImageSize();
+		
+	int w = kinect.getWidth();
+	int h = kinect.getHeight();
+
+	currentDepthImage = kinect.getRawDepthPixels();
+	int validPointCount = 0;
+	ofVec3f center(0,0,0);
+	for(int y = 0; y < h; y++) {
+		for(int j = 0; j < w; j++) {
+			float pixel = currentDepthImage[y*w+j];
+			int x = j;
+			float z = pixel;
+			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
+			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
+			
+			// add each point into pointCloud
+			pointCloud.push_back(Point3f(xReal, yReal, z));
+		}
+	}
+
+		
+/*
+	////METHOD 2 kinect's cloud
+	for(int y = 0; y < kinect.getHeight(); y++){
+		for(int x = 0; x < kinect.getWidth(); x++){
+			float color = kinect.getPixelsRef().getColor(x, y).getBrightness();
+			ofVec3f worldp = kinect.getWorldCoordinateAt(x, y);
+			pointCloud.push_back(toCv(worldp));
+		}
+	}
+*/
+	
+	updateColors();
+}
+
+//void ofxRGBDAlignment::updatePointCloud() {
+	
 	/*
 	pointCloud.clear();
 	
@@ -229,7 +276,7 @@ void ofxRGBDAlignment::updatePointCloud() {
 //	cout << "mesh center " << meshCenter << " distance " << meshDistance << endl; 
 	 */
 	
-}
+//}
 
 void ofxRGBDAlignment::updateMesh() {
 	
@@ -290,6 +337,7 @@ void ofxRGBDAlignment::updateMesh() {
 	cout << "faces added " << facesAdded << endl;
 }
 
+/*
 void ofxRGBDAlignment::setPointCloud(vector<Point3f>& newCloud){
 //	pointCloud.clear();
 //	for(int i = 0; i < newCloud.size(); i++){
@@ -301,6 +349,7 @@ void ofxRGBDAlignment::setPointCloud(vector<Point3f>& newCloud){
 		//updateMesh();
 	}
 }
+*/
 
 void ofxRGBDAlignment::updateColors() {
 	pointCloudColors.clear();

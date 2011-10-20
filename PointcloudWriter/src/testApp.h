@@ -33,10 +33,11 @@ class testApp : public ofBaseApp{
 	ofxKinect kinect;
 	ofxKinectPointcloudRecorder recorder;
 	
-	bool cloudRead;
-	vector< vector<ofVec3f> > points;
-	vector<ofVec3f> cloud;
+	bool frameRead;
+	unsigned short* frame;
+	vector< vector<ofVec3f> > clouds;
 	
+	ofxGameCamera cam;
 //	ofxRGBDAlignment alignment;		
 //	void calibrateFromDirectory();
 //	void loadPreviewSequence();

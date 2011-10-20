@@ -37,6 +37,11 @@ void ofxKinectPointcloudRecorder::addImage(unsigned short* image){
 	unlock();
 }
 
+//void ofxKinectPointcloudRecorder::collectIntrinsics(ofxKinect& kinect) {
+//	
+//
+//}
+
 void ofxKinectPointcloudRecorder::threadedFunction(){
 
 	while(isThreadRunning()){
@@ -50,22 +55,21 @@ void ofxKinectPointcloudRecorder::threadedFunction(){
 		unlock();
 		
 		if(tosave != NULL){
-			vector<ofVec3f> newpoints;
-			for(int i = 0; i < kinect->getHeight()*kinect->getWidth(); i++){
-				int distance = tosave[i];
-				if(distance > 0){
-					ofVec3f worldp = kinect->getWorldCoordinateAt(i%int(kinect->getWidth()), i/int(kinect->getWidth()), distance);
-					newpoints.push_back(worldp);
-				}
-			}
+//			vector<ofVec3f> newpoints;
+//			for(int i = 0; i < kinect->getHeight()*kinect->getWidth(); i++){
+//				int distance = tosave[i];
+//				if(distance > 0){
+//					ofVec3f worldp = kinect->getWorldCoordinateAt(i%int(kinect->getWidth()), i/int(kinect->getWidth()), distance);
+//					newpoints.push_back(worldp);
+//				}
+//			}
+//			
 			
-			
-			string filename = targetDirectory + "/" + targetFilePrefix + "_" + ofToString(currentFrame) +  ".pts";
+			string filename = targetDirectory + "/" + targetFilePrefix + "_" + ofToString(currentFrame) +  ".tga";
 			ofFile file(filename, ofFile::WriteOnly, true);
-			int size = newpoints.size();
-			
-			file.write( (char*)&size, sizeof(int));
-			file.write( (char*)&newpoints[0], sizeof(ofVec3f)*size);					   
+//			int size = newpoints.size();
+//			file.write( (char*)&size, sizeof(int) );
+			file.write( (char*)&tosave[0], sizeof(unsigned short)*640*480 );					   
 			file.close();
 			
 			/*
@@ -85,18 +89,15 @@ void ofxKinectPointcloudRecorder::threadedFunction(){
 	}
 }
 
-vector<ofVec3f> ofxKinectPointcloudRecorder::readPointcloud(string filename) {
+unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(string filename) {
 	int amnt;
 	ofFile infile(filename, ofFile::ReadOnly, true);
-	return readPointcloud(infile);
+	return readDepthFrame(infile);
 }
 
-vector<ofVec3f> ofxKinectPointcloudRecorder::readPointcloud(ofFile infile){
-	int amnt;
-	infile.read((char*)&amnt,sizeof(int));
-	vector<ofVec3f> returnvec(amnt);
-	
-	infile.read((char*)&(returnvec[0]), sizeof(ofVec3f)*amnt);
+unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(ofFile infile){
+	unsigned short* outbuf = new unsigned short[640*480];
+	infile.read((char*)(&outbuf[0]), sizeof(unsigned short)*640*480);
 	infile.close();
-	return returnvec;
+	return outbuf;
 }

@@ -11,6 +11,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxKinect.h"
 
 using namespace ofxCv;
 using namespace cv;
@@ -27,9 +28,9 @@ class ofxRGBDAlignment {
 	bool ready();
 //	void saveCalibration(string filename);
 
-	//Display of dat
 	void setColorImage(ofImage& colorImage);
 	void setDepthImage(unsigned short* pixels);
+	void updatePointCloud(ofxKinect& kinect);
 	void update(); //updates current mesh
 
 	void drawMesh();
@@ -38,10 +39,12 @@ class ofxRGBDAlignment {
 	void saveCalibration();
 	void loadCalibration();
 	void resetCalibration();
-	void setPointCloud(vector<Point3f>& newCloud);
+
+//	void updatePointCloud(vector<Point3f>& newCloud);
 	
 	ofVec3f getMeshCenter();
 	float getMeshDistance();
+	
   protected:
 	bool hasDepthImage;
 	bool hasColorImage;
