@@ -14,7 +14,8 @@ ofxKinectPointcloudRecorder::ofxKinectPointcloudRecorder(){
 }
 
 void ofxKinectPointcloudRecorder::setup(){
-	
+    folderCount = 0;
+    incrementFolder();
 	startThread(true, false);
 	currentFrame = 0;
 }
@@ -32,9 +33,20 @@ void ofxKinectPointcloudRecorder::setRecordLocation(string directory, string fil
 void ofxKinectPointcloudRecorder::addImage(unsigned short* image){
 	unsigned short* addToQueue = new unsigned short[640*480];
 	memcpy(addToQueue, image, 640*480);
+    
 	lock();
 	saveQueue.push( addToQueue );
 	unlock();
+}
+
+void ofxKinectPointcloudRecorder::incrementFolder(){
+    currentFolderPrefix = "TAKE_" + ofToString(ofGetDay()) + "_" + ofToString(ofGetHours()) + "_" + ofToString(ofGetMinutes()) + "_" + ofToString(ofGetSeconds());
+    ofDirectory dir(targetDirectory + "/" + currentFolderPrefix);
+    
+	if(!dir.exists()){
+		dir.create(true);
+	}
+    currentFrame = 0;
 }
 
 //void ofxKinectPointcloudRecorder::collectIntrinsics(ofxKinect& kinect) {
@@ -55,34 +67,14 @@ void ofxKinectPointcloudRecorder::threadedFunction(){
 		unlock();
 		
 		if(tosave != NULL){
-//			vector<ofVec3f> newpoints;
-//			for(int i = 0; i < kinect->getHeight()*kinect->getWidth(); i++){
-//				int distance = tosave[i];
-//				if(distance > 0){
-//					ofVec3f worldp = kinect->getWorldCoordinateAt(i%int(kinect->getWidth()), i/int(kinect->getWidth()), distance);
-//					newpoints.push_back(worldp);
-//				}
-//			}
-//			
-			
-			string filename = targetDirectory + "/" + targetFilePrefix + "_" + ofToString(currentFrame) +  ".tga";
+			char filenumber[512];
+            sprintf(filenumber, "%05d", currentFrame); 
+            
+			string filename = targetDirectory +  "/" + currentFolderPrefix + "/" + targetFilePrefix + "_" + filenumber +  ".xkcd";
 			ofFile file(filename, ofFile::WriteOnly, true);
-//			int size = newpoints.size();
-//			file.write( (char*)&size, sizeof(int) );
 			file.write( (char*)&tosave[0], sizeof(unsigned short)*640*480 );					   
 			file.close();
-			
-			/*
-			int amnt;
-			ofFile openTest(filename, ofFile::ReadOnly, true);
-			openTest.read((char*)&amnt,sizeof(int));
-			cout << " amount " << amnt << endl;
-			
-			vector<ofVec3f> testvec(amnt);
-			openTest.read((char*)&(testvec[0]), sizeof(ofVec3f)*amnt);
-			openTest.close();
-			 */
-			
+						
 			currentFrame++;
 			delete tosave;			
 		}

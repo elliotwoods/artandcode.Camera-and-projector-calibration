@@ -190,7 +190,8 @@ void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
 	ofVec3f center(0,0,0);
 	for(int y = 0; y < h; y++) {
 		for(int j = 0; j < w; j++) {
-			float pixel = currentDepthImage[y*w+j];
+			//float pixel = rawToCentimeters( currentDepthImage[y*w+j] );
+            float pixel = currentDepthImage[y*w+j];
 			int x = j;
 			float z = pixel;
 			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
@@ -214,6 +215,7 @@ void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
 */
 	
 	updateColors();
+    updateMesh();
 }
 
 //void ofxRGBDAlignment::updatePointCloud() {
@@ -299,8 +301,6 @@ void ofxRGBDAlignment::updateMesh() {
 	int h = 480;
 	for(int i = 0; i < imagePoints.size(); i++) {
 		ofVec2f textureCoord = ofVec2f(imagePoints[i].x,imagePoints[i].y);
-		
-		
 		int j = (int)imagePoints[i].y * currentColorImage.getWidth() + (int) imagePoints[i].x;
 		ofFloatColor color;
 		color = ofFloatColor(1, 1, 1, 1);		
@@ -308,6 +308,7 @@ void ofxRGBDAlignment::updateMesh() {
 		mesh.setTexCoord(i, textureCoord);
 		mesh.setVertex(i, toOf(pointCloud[i]));
 	}
+    
 	int facesAdded = 0;
 	mesh.clearIndices();
 	for (int y = 0; y < h-1; y++){
@@ -334,7 +335,7 @@ void ofxRGBDAlignment::updateMesh() {
 		}
 	}
 	
-	cout << "faces added " << facesAdded << endl;
+	//cout << "faces added " << facesAdded << endl;
 }
 
 /*
@@ -427,6 +428,7 @@ void ofxRGBDAlignment::drawPointCloud() {
 	glEnableClientState(GL_COLOR_ARRAY);
 	glColorPointer(3, GL_FLOAT, sizeof(Point3f), &(pointCloudColors[0].x));
 	glVertexPointer(3, GL_FLOAT, sizeof(Point3f), &(pointCloud[0].x));
+
 	glDrawArrays(GL_POINTS, 0, pointCloud.size());
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
