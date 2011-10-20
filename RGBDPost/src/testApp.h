@@ -29,16 +29,19 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 	void exit();
 	
-	ofxCvCheckerboardPreview kinectCheckerPreview;
-	ofxCvCheckerboardPreview cameraCheckerPreview;
-	ofxRGBDAlignment depthRGBAlignment;		
+	ofxRGBDAlignment alignment;		
+	void calibrateFromDirectory();
+	void loadPreviewSequence();
 	
-	ofImage grayscaleDepthCamera;
-	ofImage colorExternalCamera;
-	ofImage grayscaleExternalCamera;
-//	ofVideoGrabber rgbcamera;
-//	ofxEdsdk::Camera slr;
-//	ofxKinect kinect;
+	bool framesLoaded;
+	int totalFrames;
+	int currentFrame;
+	
+//	ofxCvCheckerboardPreview kinectCheckerPreview;
+//	ofxCvCheckerboardPreview cameraCheckerPreview;
+	
+	vector< vector<ofVec3f> > kinectClouds;
+	vector<ofImage> externalImages;
 	
 	ofxCVgui* gui;
 	scrGroupTabbed* mainScreen;
@@ -46,12 +49,12 @@ class testApp : public ofBaseApp{
 	scrGroupGrid* preview;
 	scrDraw2D* kinectView;
 	scrDraw2D* depthView;
-	scrDraw2D* cameraView;
 	scrGameView3D* pointcloudView;
-	ofNode pointcloudNode;
-	
+	scrWidgets* tools;
+		
 	void drawOnKinect(ofRectangle& drawRect);
 	void drawOnCamera(ofRectangle& drawRect);
 	void drawOnPoint(ofNode& drawNode);
 	
+
 };

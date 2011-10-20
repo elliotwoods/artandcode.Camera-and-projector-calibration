@@ -50,6 +50,38 @@ void testApp::setup(){
 
 }
 
+void testApp::calibrateFromDirectory(){
+	ofFileDialogResult aResults = ofSystemLoadDialog("Load Depth Perspective Chessboards", true);
+	if(aResults.bSuccess){
+		ofFileDialogResult bResults = ofSystemLoadDialog("Load External Images Chessboards", true);
+		if(bResults.bSuccess){
+			alignment.calibrateFromDirectoryPair(aResults.getPath(), bResults.getPath());
+		}
+	}
+}
+
+void testApp::loadPreviewSequence(){
+	ofFileDialogResult aResults = ofSystemLoadDialog("Load Depth Images", true);
+	if(aResults.bSuccess){
+		ofFileDialogResult bResults = ofSystemLoadDialog("Load External Images", true);
+		if(bResults.bSuccess){
+			
+			ofDirectory dirList;
+			dirList.listDir(directory);
+			for(int i = 0; i < dirList.size(); i++) {
+				cur.loadImage(dirList.getPath(i));
+				if(!add(toCv(cur))) {
+					ofLog(OF_LOG_ERROR, "Calibration::add() failed on " + dirList.getPath(i));
+				}
+			}
+			
+			alignment.calibrateFromDirectoryPair(aResults.getPath(), bResults.getPath());
+			framesLoaded = true;
+		}
+	}
+	
+}
+
 //--------------------------------------------------------------
 void testApp::update(){
 

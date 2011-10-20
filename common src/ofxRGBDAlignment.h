@@ -23,7 +23,7 @@ class ofxRGBDAlignment {
 	void setup(int squaresWide, int squaresTall, int squareSize);
 	
 	bool addCalibrationImagePair(ofPixels& ir, ofPixels &camera);	//TODO: set calibration files
-	bool setCalibrationDirectoryPair(string irImageDirectory, string colorImageDirectory);
+	bool calibrateFromDirectoryPair(string irImageDirectory, string colorImageDirectory);
 	bool ready();
 //	void saveCalibration(string filename);
 

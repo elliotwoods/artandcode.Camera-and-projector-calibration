@@ -92,7 +92,7 @@ bool ofxRGBDAlignment::addCalibrationImagePair(ofPixels &ir, ofPixels &camera) {
 
 //-----------------------------------------------
 
-bool ofxRGBDAlignment::setCalibrationDirectoryPair(string depthImageDirectory, string colorImageDirectory){
+bool ofxRGBDAlignment::calibrateFromDirectoryPair(string depthImageDirectory, string colorImageDirectory){
 	
 	depthCalibration.calibrateFromDirectory(depthImageDirectory);
 	colorCalibration.calibrateFromDirectory(colorImageDirectory);
@@ -286,6 +286,7 @@ void ofxRGBDAlignment::updateMesh() {
 			}
 		}
 	}
+	
 	cout << "faces added " << facesAdded << endl;
 }
 
