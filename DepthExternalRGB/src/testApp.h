@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxDepthRGBAlignment.h"
+#include "ofxRGBDAlignment.h"
 #include "ofxKinect.h"
 #include "ofxCvCheckerboardPreview.h"
 
@@ -33,7 +33,7 @@ class testApp : public ofBaseApp{
 	
 	ofxCvCheckerboardPreview kinectCheckerPreview;
 	ofxCvCheckerboardPreview cameraCheckerPreview;
-	ofxDepthRGBAlignment depthRGBAlignment;		
+	ofxRGBDAlignment depthRGBAlignment;		
 	
 	ofImage grayscaleKinectCamera;
 	ofImage colorExternalCamera;

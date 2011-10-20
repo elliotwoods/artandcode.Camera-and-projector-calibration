@@ -44,10 +44,10 @@ void testApp::setup(){
 	ofAddListener(kinectView->evtDraw, this, &testApp::drawOnKinect);
 	ofAddListener(cameraView->evtDraw, this, &testApp::drawOnCamera);
 	ofAddListener(pointcloudView->evtDraw3D, this, &testApp::drawOnPoint);
+	
 	gui = new ofxCVgui();
 	gui->init(*mainScreen);
 
-	
 }
 
 //--------------------------------------------------------------
@@ -134,8 +134,8 @@ void testApp::drawOnCamera(ofRectangle& drawRect){
 }
 
 void testApp::drawOnPoint(ofNode& drawNode){
-	//depthRGBAlignment.drawPointCloud();
-	depthRGBAlignment.drawMesh();
+	depthRGBAlignment.drawPointCloud();
+	//depthRGBAlignment.drawMesh();
 }
 
 //--------------------------------------------------------------
