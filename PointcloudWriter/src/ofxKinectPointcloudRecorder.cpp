@@ -15,8 +15,8 @@ ofxKinectPointcloudRecorder::ofxKinectPointcloudRecorder(){
 
 void ofxKinectPointcloudRecorder::setup(){
     folderCount = 0;
-    incrementFolder();
-	startThread(true, false);
+    
+    startThread(true, false);
 	currentFrame = 0;
 }
 
@@ -39,13 +39,18 @@ void ofxKinectPointcloudRecorder::addImage(unsigned short* image){
 	unlock();
 }
 
-void ofxKinectPointcloudRecorder::incrementFolder(){
+void ofxKinectPointcloudRecorder::incrementFolder(ofImage posterFrame){
     currentFolderPrefix = "TAKE_" + ofToString(ofGetDay()) + "_" + ofToString(ofGetHours()) + "_" + ofToString(ofGetMinutes()) + "_" + ofToString(ofGetSeconds());
     ofDirectory dir(targetDirectory + "/" + currentFolderPrefix);
     
 	if(!dir.exists()){
 		dir.create(true);
 	}
+    try{
+        posterFrame.saveImage(targetDirectory+"/"+currentFolderPrefix+"/_poster.png");
+    }catch(...){
+        
+    }
     currentFrame = 0;
 }
 

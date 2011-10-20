@@ -22,7 +22,7 @@ class ofxKinectPointcloudRecorder : ofThread {
 	void setup();
 	void setRecordLocation(string directory, string filePrefix);
 	void addImage(unsigned short* image);
-	void incrementFolder();
+	void incrementFolder(ofImage posterFrame);
     
 	unsigned short* readDepthFrame(string filename);
 	unsigned short* readDepthFrame(ofFile file);

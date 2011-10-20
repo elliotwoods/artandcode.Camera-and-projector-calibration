@@ -103,8 +103,10 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
 	if(key == ' '){
 		recording = !recording;
-        if(!recording){
-            recorder.incrementFolder();
+        if(recording){
+            ofImage posterFrame;
+            posterFrame.setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+            recorder.incrementFolder(posterFrame);
         }
 	}
 
