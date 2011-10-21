@@ -24,8 +24,8 @@ class ofxKinectPointcloudRecorder : ofThread {
 	void addImage(unsigned short* image);
 	void incrementFolder(ofImage posterFrame);
     
-	unsigned short* readDepthFrame(string filename);
-	unsigned short* readDepthFrame(ofFile file);
+	unsigned short* readDepthFrame(string filename, unsigned short* outbuf = NULL);
+	unsigned short* readDepthFrame(ofFile file, unsigned short* outbuf = NULL);
 
   protected:
 	void threadedFunction();

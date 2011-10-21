@@ -86,14 +86,16 @@ void ofxKinectPointcloudRecorder::threadedFunction(){
 	}
 }
 
-unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(string filename) {
+unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(string filename, unsigned short* outbuf) {
 	int amnt;
 	ofFile infile(filename, ofFile::ReadOnly, true);
-	return readDepthFrame(infile);
+	return readDepthFrame(infile, outbuf);
 }
 
-unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(ofFile infile){
-	unsigned short* outbuf = new unsigned short[640*480];
+unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(ofFile infile,  unsigned short* outbuf){
+    if(outbuf == NULL){
+        outbuf = new unsigned short[640*480];
+    }
 	infile.read((char*)(&outbuf[0]), sizeof(unsigned short)*640*480);
 	infile.close();
 	return outbuf;

@@ -31,6 +31,8 @@ class ofxRGBDAlignment {
 	void setColorImage(ofImage& colorImage);
 	void setDepthImage(unsigned short* pixels);
 	void updatePointCloud(ofxKinect& kinect);
+    void updatePointCloud(unsigned short* depthPixelsRaw, int w, int h);
+    
 	void update(); //updates current mesh
 
 	void drawMesh();
@@ -41,7 +43,8 @@ class ofxRGBDAlignment {
 	void resetCalibration();
 
 //	void updatePointCloud(vector<Point3f>& newCloud);
-	
+	void drawCalibration(bool left);
+    
 	ofVec3f getMeshCenter();
 	float getMeshDistance();
 	

@@ -169,6 +169,13 @@ void ofxRGBDAlignment::update() {
 }
 
 void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
+ 	int w = kinect.getWidth();
+	int h = kinect.getHeight();
+    
+    updatePointCloud(kinect.getRawDepthPixels(), w, h);
+}
+
+void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, int h){
 	
 	////METHOD 1 custom cloud
 	
@@ -181,11 +188,9 @@ void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
 	
 	Point2d principalPoint = depthCalibration.getUndistortedIntrinsics().getPrincipalPoint();
 	cv::Size imageSize = depthCalibration.getUndistortedIntrinsics().getImageSize();
-		
-	int w = kinect.getWidth();
-	int h = kinect.getHeight();
 
-	currentDepthImage = kinect.getRawDepthPixels();
+    currentDepthImage = depthPixelsRaw;
+    
 	int validPointCount = 0;
 	ofVec3f center(0,0,0);
 	for(int y = 0; y < h; y++) {
@@ -215,7 +220,7 @@ void ofxRGBDAlignment::updatePointCloud(ofxKinect& kinect){
 */
 	
 	updateColors();
-    updateMesh();
+    //updateMesh();
 }
 
 //void ofxRGBDAlignment::updatePointCloud() {
@@ -391,6 +396,14 @@ void ofxRGBDAlignment::updateColors() {
 	}
 }
 
+void ofxRGBDAlignment::drawCalibration(bool left){
+    if(left){
+        depthCalibration.draw3d();
+    }
+    else{
+        colorCalibration.draw3d();
+    }
+}
 
 ofVec3f ofxRGBDAlignment::getMeshCenter(){
 	return meshCenter;
