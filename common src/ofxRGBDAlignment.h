@@ -26,7 +26,6 @@ class ofxRGBDAlignment {
 	bool addCalibrationImagePair(ofPixels& ir, ofPixels &camera);	//TODO: set calibration files
 	bool calibrateFromDirectoryPair(string irImageDirectory, string colorImageDirectory);
 	bool ready();
-//	void saveCalibration(string filename);
 
 	void setColorImage(ofImage& colorImage);
 	void setDepthImage(unsigned short* pixels);
@@ -42,7 +41,6 @@ class ofxRGBDAlignment {
 	void loadCalibration();
 	void resetCalibration();
 
-//	void updatePointCloud(vector<Point3f>& newCloud);
 	void drawCalibration(bool left);
     
 	ofVec3f getMeshCenter();

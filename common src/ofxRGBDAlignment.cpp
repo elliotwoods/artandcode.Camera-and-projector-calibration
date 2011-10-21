@@ -190,7 +190,7 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 	cv::Size imageSize = depthCalibration.getUndistortedIntrinsics().getImageSize();
 
     currentDepthImage = depthPixelsRaw;
-    
+
 	int validPointCount = 0;
 	ofVec3f center(0,0,0);
 	for(int y = 0; y < h; y++) {
@@ -204,6 +204,20 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 			
 			// add each point into pointCloud
 			pointCloud.push_back(Point3f(xReal, yReal, z));
+            
+            center += ofVec3f(xReal, yReal, z);
+            validPointCount++;
+		}
+	}
+
+    meshCenter = center / validPointCount;
+	meshDistance = 0;
+	for(int i = 0; i < pointCloud.size(); i++){
+		float thisDistance = center.distance(ofVec3f(pointCloud[i].x,
+													 pointCloud[i].y,
+													 pointCloud[i].z));
+		if(thisDistance > meshDistance){
+			meshDistance = thisDistance;
 		}
 	}
 
