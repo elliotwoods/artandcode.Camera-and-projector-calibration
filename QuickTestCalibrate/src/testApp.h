@@ -70,5 +70,9 @@ class testApp : public ofBaseApp{
     
     string xmlSaveFile;
     ofxXmlSettings videosave;
-
+	
+	bool playing;
+	ofFbo fbo;
+	ofPixels pixels;
+	bool hide;
 };

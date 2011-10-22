@@ -7,7 +7,7 @@ void testApp::setup(){
     videoLoaded = false;
     
     currentCloud = new unsigned short[640*480];
-    cam.speed = 2;
+    cam.speed = 5;
     cam.autosavePosition = true;
     cam.useArrowKeys = false;
     cam.loadCameraPosition();
@@ -28,6 +28,11 @@ void testApp::setup(){
     
     currentImage = 0;
     calibrationLoaded = false;
+	
+	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB, 4);
+	playing = false;
+	cam.setScale(1,-1,1);
+	meshViewer.setScale(1,-1,1);
 }
 
 //--------------------------------------------------------------
@@ -45,8 +50,8 @@ void testApp::update(){
         bool videoFrameUpdated = false;
         bool depthFrameUpdated = false;
         if(frameASet && frameBSet){
-            float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
-            currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
+			float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
+			currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
             currentDepthFrame = ofMap(scrubPercent, 0, 1, depthFrameA, depthFrameB);
             videoFrameUpdated = depthFrameUpdated = true;
         }
@@ -60,10 +65,10 @@ void testApp::update(){
         }   
         
         if(videoFrameUpdated){
-            video.setFrame(currentVideoFrame);
-            video.update();
-            testImage.setFromPixels(video.getPixelsRef());            
-            alignment.setColorImage(testImage);
+//            video.setFrame(currentVideoFrame);
+//            video.update();
+//            testImage.setFromPixels(video.getPixelsRef());            
+//            alignment.setColorImage(testImage);
             //cout << "current video frame is " << currentVideoFrame << endl;
         }
         
@@ -75,7 +80,12 @@ void testApp::update(){
         alignment.updatePointCloud(currentCloud, 640, 480);
 
     }
-    
+		
+	if(playing){
+		currentDepthFrame++;
+		currentVideoFrame++;
+	}
+	
 //    if(videoLoaded){
 //        video.update();
 //    }
@@ -85,36 +95,50 @@ void testApp::update(){
 void testApp::draw(){
     
     if(loaded && calibrated && videoLoaded){
-        meshViewer.setPosition(alignment.getMeshCenter() + ofVec3f(0, 0, 10));
+		ofVec3f spinVec(1,0,0);
+		//spinVec.rotate(ofGetMouseY()/2.0, ofVec3f(0,1,0));
+        meshViewer.setPosition( spinVec * ofGetMouseX() );
         cout << " center! " << alignment.getMeshCenter() << endl;
                                meshViewer.lookAt(alignment.getMeshCenter());
-        meshViewer.lookAt(alignment.getMeshCenter(), ofVec3f(0,1,0));
+        meshViewer.lookAt(ofVec3f(0,0,0));
         cout << "cam pos " << cam.getPosition() << endl;
     }
-    
-    cam.begin();
+	
+    fbo.begin();
+	ofClear(75, 75, 75);
+	
+    meshViewer.begin();
     if(loaded && calibrated && videoLoaded){
-        alignment.drawPointCloud();
-        //alignment.drawMesh();
+        //alignment.drawPointCloud();
+        alignment.drawMesh();
     }
     
     if(calibrated && !loaded){
         alignment.drawCalibration(mouseX > ofGetWidth()/2);
     }
     cam.end();
-    
+	fbo.end();
+	
+	fbo.draw(0,0);
    // image.draw(0,0);
-    if(calibrationLoaded){
+    if(!hide && calibrationLoaded){
         externalImages[currentImage].draw(ofRectangle(0,0,320,240));
         kinectImages[currentImage].draw(ofRectangle(320,0,853,480));        
         kinectCheckers.draw(ofRectangle(320,0,853, 480));
         externalCheckers.draw(ofRectangle(0,0,320,240));
     }
-    
+
+	if(playing){
+		fbo.readToPixels(pixels);
+		char pixname[1024];
+		sprintf(pixname, "FRAME_%05d.png", ofGetFrameNum());
+		ofSaveImage(pixels, pixname);
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+	
     if(key == 'C'){
         //alignment.calibrateFromDirectoryPair("calibration/kinect","calibration/external");
         ofDirectory kinect, external;
@@ -224,7 +248,20 @@ void testApp::keyPressed(int key){
         }
     }
     
-
+	if(key == 'p'){
+		playing = !playing;
+	}
+	
+	if(key == 'h'){
+		hide = !hide;
+	}
+	
+	if(key == 'u'){
+		video.setFrame(currentVideoFrame);
+		video.update();
+		testImage.setFromPixels(video.getPixelsRef());            
+		alignment.setColorImage(testImage);		
+	}
 }
 
 //--------------------------------------------------------------

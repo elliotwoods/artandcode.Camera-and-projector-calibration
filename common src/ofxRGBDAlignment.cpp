@@ -233,8 +233,8 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 	}
 */
 	
-	updateColors();
-    //updateMesh();
+	//updateColors();
+    updateMesh();
 }
 
 //void ofxRGBDAlignment::updatePointCloud() {
@@ -325,16 +325,16 @@ void ofxRGBDAlignment::updateMesh() {
 		color = ofFloatColor(1, 1, 1, 1);		
 		mesh.setColor(i, color);
 		mesh.setTexCoord(i, textureCoord);
-		mesh.setVertex(i, toOf(pointCloud[i]));
+		mesh.setVertex(i, toOf(pointCloud[i]) - meshCenter);
 	}
     
 	int facesAdded = 0;
 	mesh.clearIndices();
 	for (int y = 0; y < h-1; y++){
 		for (int x=0; x < w-1; x++){
-			if(pointCloud[x+y*w].z != 0 &&
-			   pointCloud[(x+1)+y*w].z != 0 &&
-			   pointCloud[x+(y+1)*w].z != 0)
+			if(pointCloud[x+y*w].z > 1 &&
+			   pointCloud[(x+1)+y*w].z > 1 &&
+			   pointCloud[x+(y+1)*w].z > 1)
 			{
 				mesh.addIndex(x+y*w);				// 0
 				mesh.addIndex((x+1)+y*w);			// 1
@@ -342,9 +342,9 @@ void ofxRGBDAlignment::updateMesh() {
 				facesAdded++;
 			}
 			
-			if(pointCloud[(x+1)+y*w].z != 0 &&
-			   pointCloud[x+(y+1)*w].z != 0 &&
-			   pointCloud[(x+1)+(y+1)*w].z != 0)
+			if(pointCloud[(x+1)+y*w].z > 1 &&
+			   pointCloud[x+(y+1)*w].z > 1 &&
+			   pointCloud[(x+1)+(y+1)*w].z > 1)
 			{
 				mesh.addIndex((x+1)+y*w);			// 1
 				mesh.addIndex(x+(y+1)*w);			// 10
@@ -354,7 +354,7 @@ void ofxRGBDAlignment::updateMesh() {
 		}
 	}
 	
-	//cout << "faces added " << facesAdded << endl;
+	cout << "faces added " << facesAdded << endl;
 }
 
 /*

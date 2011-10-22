@@ -1,28 +1,35 @@
 #include "testApp.h"
 
 //--------------------------------------------------------------
-
 void testApp::setup(){
+    loaded = false;
+    calibrated = false;
+    videoLoaded = false;
+    
+    currentCloud = new unsigned short[640*480];
+    cam.speed = 2;
+    cam.autosavePosition = true;
+    cam.useArrowKeys = false;
+    cam.loadCameraPosition();
+    
+    //testImage.loadImage("MVI_9301.MOV.png");
+    alignment.setup(10, 7, 4);
+    alignment.setColorImage(testImage);
 
-	ofEnableAlphaBlending();
-	ofSetFrameRate(60);
-	
-	kinect.setUseRegistration(true);
-	kinect.init(false);
-	kinect.setVerbose(true);
-	kinect.open();
+    externalCheckers.setup(10, 7, 4);
+    kinectCheckers.setup(10, 7, 4);
+    
+    scrubVideo = false;
+    frameASet = false;
+    frameBSet = false;
+    
+    currentDepthFrame = 0;
+    currentVideoFrame = 0;
+    
+    currentImage = 0;
+    calibrationLoaded = false;
 
-	slr.setup();
-//	rgbcamera.setDeviceID(8);
-//	rgbcamera.initGrabber(640, 480);
-	
-	kinectCheckerPreview.setup(10,7,4);
-	cameraCheckerPreview.setup(10,7,4);
-	depthRGBAlignment.setup(10,7,4);
-	
-	grayscaleExternalCamera.allocate(10, 10, OF_IMAGE_GRAYSCALE);
-	grayscaleKinectCamera.allocate(10, 10, OF_IMAGE_GRAYSCALE);
-	
+	//**load source wigdet
 	kinectView = new scrDraw2D("Kinect View", grayscaleKinectCamera);
 	cameraView = new scrDraw2D("Camera View", grayscaleExternalCamera);
 	depthView  = new scrDraw2D("Depth View", kinect.getDepthTextureReference());
@@ -35,8 +42,8 @@ void testApp::setup(){
 	calibrate->push(cameraView);
 	calibrate->push(depthView);
 	
-	preview = new scrGroupGrid("Preview");
-	preview->push(pointcloudView);
+	loadSource = new scrGroupGrid("Load Source");
+	loadSource->push(pointcloudView);
 	
 	mainScreen->push(calibrate);
 	mainScreen->push(preview);
@@ -47,150 +54,204 @@ void testApp::setup(){
 	
 	gui = new ofxCVgui();
 	gui->init(*mainScreen);
-
-}
-
-void testApp::calibrateFromDirectory(){
-	ofFileDialogResult aResults = ofSystemLoadDialog("Load Depth Perspective Chessboards", true);
-	if(aResults.bSuccess){
-		ofFileDialogResult bResults = ofSystemLoadDialog("Load External Images Chessboards", true);
-		if(bResults.bSuccess){
-			alignment.calibrateFromDirectoryPair(aResults.getPath(), bResults.getPath());
-		}
-	}
-}
-
-void testApp::loadPreviewSequence(){
-	ofFileDialogResult aResults = ofSystemLoadDialog("Load Depth Images", true);
-	if(aResults.bSuccess){
-		ofFileDialogResult bResults = ofSystemLoadDialog("Load External Images", true);
-		if(bResults.bSuccess){
-			
-			ofDirectory dirList;
-			dirList.listDir(directory);
-			for(int i = 0; i < dirList.size(); i++) {
-				cur.loadImage(dirList.getPath(i));
-				if(!add(toCv(cur))) {
-					ofLog(OF_LOG_ERROR, "Calibration::add() failed on " + dirList.getPath(i));
-				}
-			}
-			
-			alignment.calibrateFromDirectoryPair(aResults.getPath(), bResults.getPath());
-			framesLoaded = true;
-		}
-	}
-	
+		
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+//    image.loadImage("calibration/external/MVI_9292.MOV.png");
+    //image.loadImage("testimage.jpg");
+    
+    if(calibrationLoaded){
+        kinectCheckers.setTestImage(kinectImages[currentImage].getPixelsRef());
+        externalCheckers.setTestImage(externalImages[currentImage].getPixelsRef());
+    }
+    
+    calibrated = alignment.ready();
+    if(loaded && calibrated && videoLoaded){
+        bool videoFrameUpdated = false;
+        bool depthFrameUpdated = false;
+        if(frameASet && frameBSet){
+            float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
+            currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
+            currentDepthFrame = ofMap(scrubPercent, 0, 1, depthFrameA, depthFrameB);
+            videoFrameUpdated = depthFrameUpdated = true;
+        }
+        else if(scrubVideo) {
+            currentVideoFrame = ofMap(mouseX, 0, ofGetWidth(), 0, video.getTotalNumFrames()-1, true);
+            videoFrameUpdated = true;
+        }
+        else {
+            currentDepthFrame = ofMap(mouseX, 0, ofGetWidth(), 0, pointClouds.numFiles()-1, true);
+            depthFrameUpdated = true;
+        }   
+        
+        if(videoFrameUpdated){
+            video.setFrame(currentVideoFrame);
+            video.update();
+            testImage.setFromPixels(video.getPixelsRef());            
+            alignment.setColorImage(testImage);
+            //cout << "current video frame is " << currentVideoFrame << endl;
+        }
+        
+        if(depthFrameUpdated){
+            decoder.readDepthFrame(pointClouds.getPath( currentDepthFrame ), currentCloud );
+            //cout << "current depth frame is " << currentDepthFrame << endl;
+        }
 
-	bool isupdated = false;
-	
-	slr.update();
-	if(slr.isFrameNew()) {
-		
-		if(mainScreen->iSelection == 0){
-			grayscaleExternalCamera.setFromPixels( slr.getLivePixels() );
-			grayscaleExternalCamera.setImageType(OF_IMAGE_GRAYSCALE);
-			cameraCheckerPreview.setTestImage( grayscaleExternalCamera.getPixelsRef() );		
-		}
-		else{
-			ofPixelsRef pix = slr.getLivePixels();
-			colorExternalCamera.setFromPixels(pix.getPixels(), pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);
-			depthRGBAlignment.setColorImage( colorExternalCamera );
-		}
-		isupdated = true;		
-	}
-	
-	kinect.update();
-	if(kinect.isFrameNew()){
-		if(mainScreen->iSelection == 0){
-			ofPixelsRef p = kinect.getPixelsRef();
-//			cout << " kinect size is " << p.getWidth() << " " << p.getHeight() << endl;
-			grayscaleKinectCamera.setFromPixels( kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR );
-			grayscaleKinectCamera.setImageType(OF_IMAGE_GRAYSCALE);
-			kinectCheckerPreview.setTestImage(grayscaleKinectCamera.getPixelsRef());
-		}
-		else {
-			//depthRGBAlignment.setDepthImage( kinect.getRawDepthPixels() );
-			vector<Point3f> newpoints;
-			for(int y = 0; y < kinect.getHeight(); y++){
-				for(int x = 0; x < kinect.getWidth(); x++){
-					float color = kinect.getPixelsRef().getColor(x, y).getBrightness();
-					if(color != 0){
-						ofVec3f worldp = kinect.getWorldCoordinateAt(x, y);
-						newpoints.push_back(toCv(worldp));
-					}
-					else{
-						newpoints.push_back(toCv(ofVec3f(0,0,0)));
-					}
-				}
-			}
-			depthRGBAlignment.setPointCloud(newpoints);
-		}
-		isupdated = true;
-	}
+        alignment.updatePointCloud(currentCloud, 640, 480);
 
-	/*
-	rgbcamera.update();
-	if(rgbcamera.isFrameNew()){
-		depthRGBAlignment.setColorImage( rgbcamera.getPixelsRef() );
-		grayCopy.setFromPixels(rgbcamera.getPixelsRef());
-		grayCopy.setImageType(OF_IMAGE_GRAYSCALE);
-		cameraCheckerPreview.setTestImage( grayCopy.getPixelsRef() );		
-		isupdated = true;
-	}
-	*/
-	
-	if(isupdated && mainScreen->iSelection == 1){
-		depthRGBAlignment.update();
-		//pointcloudNode.setPosition(depthRGBAlignment.getMeshCenter());
-	}
-	
+    }
+    
+//    if(videoLoaded){
+//        video.update();
+//    }
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-//	slr.update();
-//	slr.draw(0, 0);
-
-}
-
-void testApp::drawOnKinect(ofRectangle& drawRect){
-	kinectCheckerPreview.draw(drawRect);	
-}
-
-void testApp::drawOnCamera(ofRectangle& drawRect){
-	cameraCheckerPreview.draw(drawRect);
-}
-
-void testApp::drawOnPoint(ofNode& drawNode){
-	depthRGBAlignment.drawPointCloud();
-	//depthRGBAlignment.drawMesh();
+    
+    if(loaded && calibrated && videoLoaded){
+        meshViewer.setPosition(alignment.getMeshCenter() + ofVec3f(0, 0, 10));
+        cout << " center! " << alignment.getMeshCenter() << endl;
+                               meshViewer.lookAt(alignment.getMeshCenter());
+        meshViewer.lookAt(alignment.getMeshCenter(), ofVec3f(0,1,0));
+        cout << "cam pos " << cam.getPosition() << endl;
+    }
+    
+    cam.begin();
+    if(loaded && calibrated && videoLoaded){
+        alignment.drawPointCloud();
+        //alignment.drawMesh();
+    }
+    
+    if(calibrated && !loaded){
+        alignment.drawCalibration(mouseX > ofGetWidth()/2);
+    }
+    cam.end();
+    
+   // image.draw(0,0);
+    if(calibrationLoaded){
+        externalImages[currentImage].draw(ofRectangle(0,0,320,240));
+        kinectImages[currentImage].draw(ofRectangle(320,0,853,480));        
+        kinectCheckers.draw(ofRectangle(320,0,853, 480));
+        externalCheckers.draw(ofRectangle(0,0,320,240));
+    }
+    
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key == ' '){
-		depthRGBAlignment.addCalibrationImagePair(grayscaleKinectCamera.getPixelsRef(), grayscaleExternalCamera.getPixelsRef());
-	}
-	
-	if(key == 's'){
-		depthRGBAlignment.saveCalibration();
-	}
-	
-	if(key == 'l'){
-		depthRGBAlignment.loadCalibration();		
-	}
-	
-	if(key == 'v'){
-		rgbcamera.videoSettings();
-	}
-}
+    if(key == 'C'){
+        //alignment.calibrateFromDirectoryPair("calibration/kinect","calibration/external");
+        ofDirectory kinect, external;
+        kinect.listDir("calibration/kinect");
+        external.listDir("calibration/external");
+        for(int i = 0; i < kinect.numFiles(); i++){
+            ofImage image;
+            image.loadImage(kinect.getPath(i));
+            image.setImageType(OF_IMAGE_GRAYSCALE);
+            kinectImages.push_back(image);  
+        }
+        for(int i = 0; i < external.numFiles(); i++){
+            ofImage image;
+            image.loadImage(external.getPath(i));
+            image.setImageType(OF_IMAGE_GRAYSCALE);
+            externalImages.push_back(image);  
+        }
+        currentImage = 0;
+        cout << "loaded " << kinectImages.size() << " " << externalImages.size() << endl;
+        
+        /*
+        ofFileDialogResult r = ofSystemLoadDialog("Open ColorCamera");
+        if(r.bSuccess){
+            string directory1 = r.getPath();
+            r = ofSystemLoadDialog();
+            if(r.bSuccess){
+                alignment.calibrateFromDirectoryPair(directory1, r.getPath());
+            }
+        }
+        */
+        
+        calibrationLoaded = true;
+    }
+    
+    if(key == 'l'){
+        ofFileDialogResult r = ofSystemLoadDialog("Load Kinect Cloud", true);
+        if(r.bSuccess){
+            pointClouds.allowExt("xkcd");
+            pointClouds.listDir(r.getPath());
+            cout << "listed " << pointClouds.numFiles() << endl;
+        }
+        loaded = true;
+    }
+    
+    if(key == 'v'){
+        ofFileDialogResult r = ofSystemLoadDialog("Load Video Data", false);
+        if(r.bSuccess){
+            videoLoaded = video.loadMovie(r.getPath());
+            xmlSaveFile = r.getName() + ".xml";
+            if(videoLoaded){
+                if(videosave.loadFile(xmlSaveFile)){
+                    depthFrameA = videosave.getValue("depthFrameA", 0);
+                    depthFrameB = videosave.getValue("depthFrameB", 0);
+                    videoFrameA = videosave.getValue("videoFrameA", 0);
+                    videoFrameB = videosave.getValue("videoFrameB", 0);
+                    frameASet = true;
+                    frameBSet = true;
+                }
+            }
+        }
+    }
+    
+    if(videoLoaded && loaded && calibrated){
+        if(key == '1'){
+            depthFrameA = currentDepthFrame;
+            videoFrameA = currentVideoFrame;
+            frameASet = true;
+            videosave.setValue("depthFrameA", depthFrameA);
+            videosave.setValue("videoFrameA", videoFrameA);
+            videosave.saveFile(xmlSaveFile);
+            cout << "saving file " << xmlSaveFile << endl;
+        }
+        
+        if(key == '2'){
+            depthFrameB = currentDepthFrame;
+            videoFrameB = currentVideoFrame;
+            frameBSet = true;
+            videosave.setValue("depthFrameB", depthFrameB);
+            videosave.setValue("videoFrameB", videoFrameB);
+            videosave.saveFile(xmlSaveFile);
+            cout << "saving file " << xmlSaveFile << endl;
+        }
+    }
+    
+    if(key == ' '){
+        scrubVideo = !scrubVideo;
+    }
+    
+    if(key == 'r'){
+        frameBSet = frameASet = false;
+    }
+    
+    if(calibrationLoaded){
+        if(key == OF_KEY_LEFT){
+            currentImage = (currentImage + 1) % kinectImages.size();
+            cout << "showing image " << currentImage << endl;
+        }
+        else if(key == OF_KEY_RIGHT){
+            currentImage = (kinectImages.size() + currentImage - 1) % kinectImages.size();            
+            cout << "showing image " << currentImage << endl;
+        }
+        
+        if(key == '+'){
+            alignment.addCalibrationImagePair(kinectImages[currentImage].getPixelsRef(), 
+                                              externalImages[currentImage].getPixelsRef());
+            cout << "added images " << endl;
+        }
+    }
+    
 
-void testApp::exit() {
-	kinect.close();
 }
 
 //--------------------------------------------------------------
