@@ -28,6 +28,8 @@ class testApp : public ofBaseApp{
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    void loadVideoFile(string filePath);
+
     
     ofImage testImage;
     ofxRGBDAlignment alignment;
@@ -53,6 +55,7 @@ class testApp : public ofBaseApp{
     bool videoLoaded;
     ofxGameCamera cam;
     
+    bool scrubbing;
     bool scrubVideo;
     int currentDepthFrame;
     int currentVideoFrame;
@@ -69,10 +72,13 @@ class testApp : public ofBaseApp{
     bool videoFilesSet;
     
     string xmlSaveFile;
+    string settingsSaveFile;
     ofxXmlSettings videosave;
+    ofxXmlSettings recentSaves;
     
-    bool playing;
-    bool showMesh;
-    ofFbo fbo;
-    ofPixels savePixels;
+	bool playing;
+	ofFbo fbo;
+	ofPixels pixels;
+
+
 };

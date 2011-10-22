@@ -7,7 +7,7 @@ void testApp::setup(){
     videoLoaded = false;
     
     currentCloud = new unsigned short[640*480];
-    cam.speed = 2;
+    cam.speed = 5;
     cam.autosavePosition = true;
     cam.useArrowKeys = false;
     cam.loadCameraPosition();
@@ -26,6 +26,7 @@ void testApp::setup(){
     frameBSet = false;
     
     hideCalibrationDebug = false;
+    scrubbing = false;
     
     currentDepthFrame = 0;
     currentVideoFrame = 0;
@@ -34,9 +35,20 @@ void testApp::setup(){
     calibrationLoaded = false;
     playing = false;
     
-//    ofToggleFullscreen();
+    settingsSaveFile = "settings.xml";
+    if(recentSaves.loadFile(settingsSaveFile)){
+        cout << "preloading video " << 
+        loadVideoFile(recentSaves.getValue("videoFile", ""));
+        pointClouds.allowExt("xkcd");
+        pointClouds.listDir(recentSaves.getValue("cloudFolder", ""));
+        recentSaves.saveFile(settingsSaveFile);
+        
+        cout << "listed " << pointClouds.numFiles() << endl;
+        loaded = true;
+        
+    }
     fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB, 4);
-    savePixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
+    pixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
 }
 
 //--------------------------------------------------------------
@@ -53,96 +65,109 @@ void testApp::update(){
     if(loaded && calibrated && videoLoaded){
         bool videoFrameUpdated = false;
         bool depthFrameUpdated = false;
-        if(frameASet && frameBSet){
-            if(!playing){
+        if(scrubbing){
+            if(frameASet && frameBSet){
                 float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
                 currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
                 currentDepthFrame = ofMap(scrubPercent, 0, 1, depthFrameA, depthFrameB);
+                videoFrameUpdated = depthFrameUpdated = true;
             }
+            else if(scrubVideo) {
+                currentVideoFrame = ofMap(mouseX, 0, ofGetWidth(), 0, video.getTotalNumFrames()-1, true);
+                videoFrameUpdated = true;
+            }
+            else {
+                currentDepthFrame = ofMap(mouseX, 0, ofGetWidth(), 0, pointClouds.numFiles()-1, true);
+                depthFrameUpdated = true;
+            }   
+        }
+        if(playing){ 
+            currentDepthFrame++; 
+            currentVideoFrame++;
             videoFrameUpdated = depthFrameUpdated = true;
-        }
-        else if(scrubVideo) {
-            currentVideoFrame = ofMap(mouseX, 0, ofGetWidth(), 0, video.getTotalNumFrames()-1, true);
-            videoFrameUpdated = true;
-        }
-        else {
-            currentDepthFrame = ofMap(mouseX, 0, ofGetWidth(), 0, pointClouds.numFiles()-1, true);
-            depthFrameUpdated = true;
-        }   
-        
+        } 
+
         if(videoFrameUpdated){
-            if(playing){
-                video.setFrame(currentVideoFrame);
-                video.update();
-                testImage.setFromPixels(video.getPixelsRef());            
-                alignment.setColorImage(testImage);
-            }
-            //cout << "current video frame is " << currentVideoFrame << endl;
+            video.setFrame(currentVideoFrame);
+            video.update();
+            testImage.setFromPixels(video.getPixelsRef());            
+            alignment.setColorImage(testImage);
         }
-        
+            
         if(depthFrameUpdated){
             decoder.readDepthFrame(pointClouds.getPath( currentDepthFrame ), currentCloud );
             //cout << "current depth frame is " << currentDepthFrame << endl;
         }
-
+        
         alignment.updatePointCloud(currentCloud, 640, 480);
-        if(playing){ 
-            currentDepthFrame++; 
-            currentVideoFrame++;
-        } 
-    }
-    
-//    if(videoLoaded){
-//        video.update();
-//    }
+    }		
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    fbo.begin();
-    ofClear(75,75,75);
     
-    if(loaded && calibrated && videoLoaded){
-        meshViewer.setPosition(alignment.getMeshCenter() + ofVec3f(0, 0, 10));
-        cout << " center! " << alignment.getMeshCenter() << endl;
-                               meshViewer.lookAt(alignment.getMeshCenter());
-        meshViewer.lookAt(alignment.getMeshCenter(), ofVec3f(0,1,0));
-//        cout << "cam pos " << cam.getPosition() << endl;
-    }
+    fbo.begin();{
+        ofClear(75,75,75);
+        
+        if(loaded && calibrated && videoLoaded){
+            ofVec3f spinVec(1,0,0);
+            //spinVec.rotate(ofGetMouseY()/2.0, ofVec3f(0,1,0));
+            meshViewer.setPosition( spinVec * ofGetMouseX() );
+            cout << " center! " << alignment.getMeshCenter() << endl;
+                                   meshViewer.lookAt(alignment.getMeshCenter());
+            meshViewer.lookAt(ofVec3f(0,0,0));
+            cout << "cam pos " << cam.getPosition() << endl;
+        }
+        
+        fbo.begin();
+        ofClear(75, 75, 75);
+        
+        meshViewer.begin();
+        if(loaded && calibrated && videoLoaded){
+            //alignment.drawPointCloud();
+            alignment.drawMesh();
+        }
+        
+        if(calibrated && !loaded){
+            alignment.drawCalibration(mouseX > ofGetWidth()/2);
+        }
+        meshViewer.end();    
+    } fbo.end();
     
-    cam.begin();
-    if(loaded && calibrated && videoLoaded){
-        //alignment.drawPointCloud();
-        alignment.drawMesh();
-    }
-    
-    if(calibrated && !loaded){
-        alignment.drawCalibration(mouseX > ofGetWidth()/2);
-    }
-    cam.end();
-    fbo.end();
-    fbo.getTextureReference().draw(0,0);
-    
-   // image.draw(0,0);
-    if(calibrationLoaded && !hideCalibrationDebug){
+    fbo.getTextureReference().draw(0,0);    
+
+    if(!hideCalibrationDebug && calibrationLoaded){
         externalImages[currentImage].draw(ofRectangle(0,0,320,240));
         kinectImages[currentImage].draw(ofRectangle(320,0,853,480));        
         kinectCheckers.draw(ofRectangle(320,0,853, 480));
         externalCheckers.draw(ofRectangle(0,0,320,240));
     }
- 
+    ofSetColor(255, 255, 255);
+    
+    string debugString = string("scrubbing? ") + (scrubbing ? "YES" : "NO") + "\n";
+    debugString += string("scrubbing video? ") + (scrubVideo ? "YES" : "NO") + "\n";
+    debugString += string("current video frame ") + ofToString(currentVideoFrame) + "\n";
+    debugString += string("current depth frame ") + ofToString(currentDepthFrame) + "\n";
+    ofDrawBitmapString(debugString, ofPoint(30,30));
+    
     if(playing){
-        fbo.getTextureReference().readToPixels(savePixels);
+        ofDirectory dir("outframes/" + xmlSaveFile);
+        if(!dir.exists()){
+            dir.create(true);
+        }
+        
+        fbo.getTextureReference().readToPixels(pixels);
         char pixname[1024];
-        sprintf(pixname, "outframes/FRAME_%05d.png", ofGetFrameNum());
-        ofSaveImage(savePixels, pixname);
-                      
+        sprintf(pixname, "outframes/%s/FRAME_%05d.png",xmlSaveFile.c_str(), ofGetFrameNum());
+        ofSaveImage(pixels, pixname);
     }
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+	
     if(key == 'C'){
+        /*
         //alignment.calibrateFromDirectoryPair("calibration/kinect","calibration/external");
         ofDirectory kinect, external;
         kinect.listDir("calibration/kinect");
@@ -161,7 +186,10 @@ void testApp::keyPressed(int key){
         }
         currentImage = 0;
         cout << "loaded " << kinectImages.size() << " " << externalImages.size() << endl;
+        */
         
+        alignment.calibrateFromDirectoryPair("calibration/kinect","calibration/external");
+        calibrated = true;
         /*
         ofFileDialogResult r = ofSystemLoadDialog("Open ColorCamera");
         if(r.bSuccess){
@@ -173,7 +201,7 @@ void testApp::keyPressed(int key){
         }
         */
         
-        calibrationLoaded = true;
+        //calibrationLoaded = true;
     }
     
     if(key == 'l'){
@@ -181,26 +209,19 @@ void testApp::keyPressed(int key){
         if(r.bSuccess){
             pointClouds.allowExt("xkcd");
             pointClouds.listDir(r.getPath());
+            recentSaves.setValue("cloudFolder", r.getPath());
+            recentSaves.saveFile(settingsSaveFile);
+            
             cout << "listed " << pointClouds.numFiles() << endl;
+            loaded = true;
+            
         }
-        loaded = true;
     }
     
     if(key == 'v'){
         ofFileDialogResult r = ofSystemLoadDialog("Load Video Data", false);
         if(r.bSuccess){
-            videoLoaded = video.loadMovie(r.getPath());
-            xmlSaveFile = r.getName() + ".xml";
-            if(videoLoaded){
-                if(videosave.loadFile(xmlSaveFile)){
-                    depthFrameA = videosave.getValue("depthFrameA", 0);
-                    depthFrameB = videosave.getValue("depthFrameB", 0);
-                    videoFrameA = videosave.getValue("videoFrameA", 0);
-                    videoFrameB = videosave.getValue("videoFrameB", 0);
-                    frameASet = true;
-                    frameBSet = true;
-                }
-            }
+            loadVideoFile(r.getPath());
         }
     }
     
@@ -251,6 +272,7 @@ void testApp::keyPressed(int key){
         }
     }
     
+
     if(key == 'h'){
         hideCalibrationDebug = !hideCalibrationDebug;
     }
@@ -259,12 +281,27 @@ void testApp::keyPressed(int key){
         playing = !playing;
     }
     
-    if(key == 'm'){
-        
+    if(key == '/'){
+        scrubbing = !scrubbing;
     }
 
 }
-
+void testApp::loadVideoFile(string filePath){
+    videoLoaded = video.loadMovie(filePath);
+    xmlSaveFile = ofFilePath::getBaseName(filePath) + ".xml";
+    if(videoLoaded){
+        recentSaves.setValue("videoFile", filePath);
+        recentSaves.saveFile(settingsSaveFile);
+        if(videosave.loadFile(xmlSaveFile)){
+            depthFrameA = videosave.getValue("depthFrameA", 0);
+            depthFrameB = videosave.getValue("depthFrameB", 0);
+            videoFrameA = videosave.getValue("videoFrameA", 0);
+            videoFrameB = videosave.getValue("videoFrameB", 0);
+            frameASet = true;
+            frameBSet = true;
+        }
+    }
+}
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
 
