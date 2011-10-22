@@ -32,7 +32,7 @@ void ofxKinectPointcloudRecorder::setRecordLocation(string directory, string fil
 
 void ofxKinectPointcloudRecorder::addImage(unsigned short* image){
 	unsigned short* addToQueue = new unsigned short[640*480];
-	memcpy(addToQueue, image, 640*480);
+	memcpy(addToQueue, image, 640*480*sizeof(unsigned short));
     
 	lock();
 	saveQueue.push( addToQueue );
@@ -97,6 +97,14 @@ unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(ofFile infile,  unsi
         outbuf = new unsigned short[640*480];
     }
 	infile.read((char*)(&outbuf[0]), sizeof(unsigned short)*640*480);
+    int lastlinesum = 0;
+    for(int i = 640*480-640*10; i < 640*480; i++){
+        lastlinesum += outbuf[i];
+//        cout << i << " " << outbuf[i] << endl;
+    }
+    
+    cout << "last lines sum " << lastlinesum << endl;
+    
 	infile.close();
 	return outbuf;
 }

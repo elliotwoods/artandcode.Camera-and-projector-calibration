@@ -65,10 +65,14 @@ class testApp : public ofBaseApp{
     int depthFrameB;
     int videoFrameB;
     
-    
+    bool hideCalibrationDebug;
     bool videoFilesSet;
     
     string xmlSaveFile;
     ofxXmlSettings videosave;
-
+    
+    bool playing;
+    bool showMesh;
+    ofFbo fbo;
+    ofPixels savePixels;
 };

@@ -194,22 +194,22 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 	int validPointCount = 0;
 	ofVec3f center(0,0,0);
 	for(int y = 0; y < h; y++) {
-		for(int j = 0; j < w; j++) {
+		for(int x = 0; x < w; x++) {
 			//float pixel = rawToCentimeters( currentDepthImage[y*w+j] );
-            float pixel = currentDepthImage[y*w+j];
-			int x = j;
-			float z = pixel;
+            unsigned short z = currentDepthImage[y*w+x];
 			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
 			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
 			
 			// add each point into pointCloud
 			pointCloud.push_back(Point3f(xReal, yReal, z));
-            
+            //pointCloud.push_back(Point3f(x/640.0, y/640., 0));
             center += ofVec3f(xReal, yReal, z);
             validPointCount++;
 		}
 	}
 
+    //cout << validPointCount << " vertices added " << endl;
+    
     meshCenter = center / validPointCount;
 	meshDistance = 0;
 	for(int i = 0; i < pointCloud.size(); i++){
@@ -233,8 +233,8 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 	}
 */
 	
-	updateColors();
-    //updateMesh();
+//	updateColors();
+    updateMesh();
 }
 
 //void ofxRGBDAlignment::updatePointCloud() {
@@ -332,9 +332,9 @@ void ofxRGBDAlignment::updateMesh() {
 	mesh.clearIndices();
 	for (int y = 0; y < h-1; y++){
 		for (int x=0; x < w-1; x++){
-			if(pointCloud[x+y*w].z != 0 &&
-			   pointCloud[(x+1)+y*w].z != 0 &&
-			   pointCloud[x+(y+1)*w].z != 0)
+			if(pointCloud[x+y*w].z > .4 &&
+			   pointCloud[(x+1)+y*w].z > .4 &&
+			   pointCloud[x+(y+1)*w].z > .4)
 			{
 				mesh.addIndex(x+y*w);				// 0
 				mesh.addIndex((x+1)+y*w);			// 1
@@ -342,9 +342,9 @@ void ofxRGBDAlignment::updateMesh() {
 				facesAdded++;
 			}
 			
-			if(pointCloud[(x+1)+y*w].z != 0 &&
-			   pointCloud[x+(y+1)*w].z != 0 &&
-			   pointCloud[(x+1)+(y+1)*w].z != 0)
+			if(pointCloud[(x+1)+y*w].z > .4 &&
+			   pointCloud[x+(y+1)*w].z > .4 &&
+			   pointCloud[(x+1)+(y+1)*w].z > .4)
 			{
 				mesh.addIndex((x+1)+y*w);			// 1
 				mesh.addIndex(x+(y+1)*w);			// 10
@@ -354,7 +354,7 @@ void ofxRGBDAlignment::updateMesh() {
 		}
 	}
 	
-	//cout << "faces added " << facesAdded << endl;
+//    cout << "faces added " << facesAdded << " vertices added " << endl;
 }
 
 /*

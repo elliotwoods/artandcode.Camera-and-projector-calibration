@@ -11,6 +11,8 @@ void testApp::setup(){
     cam.autosavePosition = true;
     cam.useArrowKeys = false;
     cam.loadCameraPosition();
+    cam.setScale(1, -1, 1);
+    ofBackground(75);
     
     //testImage.loadImage("MVI_9301.MOV.png");
     alignment.setup(10, 7, 4);
@@ -23,11 +25,18 @@ void testApp::setup(){
     frameASet = false;
     frameBSet = false;
     
+    hideCalibrationDebug = false;
+    
     currentDepthFrame = 0;
     currentVideoFrame = 0;
     
     currentImage = 0;
     calibrationLoaded = false;
+    playing = false;
+    
+//    ofToggleFullscreen();
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB, 4);
+    savePixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
 }
 
 //--------------------------------------------------------------
@@ -45,9 +54,11 @@ void testApp::update(){
         bool videoFrameUpdated = false;
         bool depthFrameUpdated = false;
         if(frameASet && frameBSet){
-            float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
-            currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
-            currentDepthFrame = ofMap(scrubPercent, 0, 1, depthFrameA, depthFrameB);
+            if(!playing){
+                float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
+                currentVideoFrame = ofMap(scrubPercent, 0, 1, videoFrameA, videoFrameB);
+                currentDepthFrame = ofMap(scrubPercent, 0, 1, depthFrameA, depthFrameB);
+            }
             videoFrameUpdated = depthFrameUpdated = true;
         }
         else if(scrubVideo) {
@@ -60,10 +71,12 @@ void testApp::update(){
         }   
         
         if(videoFrameUpdated){
-            video.setFrame(currentVideoFrame);
-            video.update();
-            testImage.setFromPixels(video.getPixelsRef());            
-            alignment.setColorImage(testImage);
+            if(playing){
+                video.setFrame(currentVideoFrame);
+                video.update();
+                testImage.setFromPixels(video.getPixelsRef());            
+                alignment.setColorImage(testImage);
+            }
             //cout << "current video frame is " << currentVideoFrame << endl;
         }
         
@@ -73,7 +86,10 @@ void testApp::update(){
         }
 
         alignment.updatePointCloud(currentCloud, 640, 480);
-
+        if(playing){ 
+            currentDepthFrame++; 
+            currentVideoFrame++;
+        } 
     }
     
 //    if(videoLoaded){
@@ -83,34 +99,45 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    fbo.begin();
+    ofClear(75,75,75);
     
     if(loaded && calibrated && videoLoaded){
         meshViewer.setPosition(alignment.getMeshCenter() + ofVec3f(0, 0, 10));
         cout << " center! " << alignment.getMeshCenter() << endl;
                                meshViewer.lookAt(alignment.getMeshCenter());
         meshViewer.lookAt(alignment.getMeshCenter(), ofVec3f(0,1,0));
-        cout << "cam pos " << cam.getPosition() << endl;
+//        cout << "cam pos " << cam.getPosition() << endl;
     }
     
     cam.begin();
     if(loaded && calibrated && videoLoaded){
-        alignment.drawPointCloud();
-        //alignment.drawMesh();
+        //alignment.drawPointCloud();
+        alignment.drawMesh();
     }
     
     if(calibrated && !loaded){
         alignment.drawCalibration(mouseX > ofGetWidth()/2);
     }
     cam.end();
+    fbo.end();
+    fbo.getTextureReference().draw(0,0);
     
    // image.draw(0,0);
-    if(calibrationLoaded){
+    if(calibrationLoaded && !hideCalibrationDebug){
         externalImages[currentImage].draw(ofRectangle(0,0,320,240));
         kinectImages[currentImage].draw(ofRectangle(320,0,853,480));        
         kinectCheckers.draw(ofRectangle(320,0,853, 480));
         externalCheckers.draw(ofRectangle(0,0,320,240));
     }
-    
+ 
+    if(playing){
+        fbo.getTextureReference().readToPixels(savePixels);
+        char pixname[1024];
+        sprintf(pixname, "outframes/FRAME_%05d.png", ofGetFrameNum());
+        ofSaveImage(savePixels, pixname);
+                      
+    }
 }
 
 //--------------------------------------------------------------
@@ -224,6 +251,17 @@ void testApp::keyPressed(int key){
         }
     }
     
+    if(key == 'h'){
+        hideCalibrationDebug = !hideCalibrationDebug;
+    }
+    
+    if(key == 'p'){
+        playing = !playing;
+    }
+    
+    if(key == 'm'){
+        
+    }
 
 }
 
@@ -254,7 +292,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-
+    fbo.allocate(w, h, GL_RGB, 4);
 }
 
 //--------------------------------------------------------------
