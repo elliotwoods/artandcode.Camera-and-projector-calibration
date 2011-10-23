@@ -13,6 +13,8 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 
+#define MAX_MARKERS 512
+
 using namespace cv;
 using namespace ofxCv;
 
@@ -34,7 +36,7 @@ public:
 	virtual void draw(float x,float y);
 	virtual void draw(float x,float y,float w, float h);
 	/**
-	 Actually the drawing is scale invariant, so these functions don't have their usual meaning.
+	 Since the drawing is scale invariant, so these functions don't have their usual meaning.
 	 */
 	virtual float getHeight() { return squaresX; };
 	virtual float getWidth() { return squaresY; };
@@ -56,5 +58,5 @@ public:
 	bool	whiteBackground;
 	float	brightness;
 	
-	BoardMarker markers[10];
+	BoardMarker markers[MAX_MARKERS];
 };

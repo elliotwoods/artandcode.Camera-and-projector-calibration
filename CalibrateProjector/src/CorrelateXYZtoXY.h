@@ -17,6 +17,7 @@
 using namespace cv;
 using namespace ofxCv;
 
+
 class CorrelateXYZtoXY {
 public:
 	CorrelateXYZtoXY();
@@ -28,19 +29,20 @@ public:
 	void	draw();
 	
 	void	correlate();
-	ofVec2f	project(const ofVec3f xyz) const;
+	ofVec2f	project(const Point3f o) const;
 	
 	ofVec2f projectorResolution;
 	
-	vector<ofVec3f>	xyz;
-	vector<ofVec2f>	xy;
+	vector<Point3f>	xyz;
+	vector<Point2f>	xy;
 	
 	unsigned int	count;
 	float			error;
 	Mat				cameraMatrix, distCoeffs;
+	map<string, bool> cvParameters;
+	Intrinsics	intrinsics;
+	bool		ready;
 	
 protected:
 	ofMesh	xyzPreview;
-	
-	map<string, bool> cvParameters;
 };

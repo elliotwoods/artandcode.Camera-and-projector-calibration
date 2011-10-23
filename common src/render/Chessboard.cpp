@@ -59,28 +59,39 @@ void Chessboard::draw(float x, float y, float w, float h) {
 	ofPopStyle();
 	
 	ofPushStyle();
+	ofEnableSmoothing();
 	ofSetLineWidth(3.0f);
 	ofSetColor(255,0,0);
-	for (int i=0; i<10; ++i)
-		ofCircle(markers[i].xy.x, markers[i].xy.y, 10);
+	ofNoFill();
+	for (int i=0; i<MAX_MARKERS; ++i) {
+		if (!markers[i].enabled || markers[i].xy.x < 0 || markers[i].xy.y < 0 || markers[i].xy.x > 1 || markers[i].xy.y > 1)
+			continue;
+		ofCircle(markers[i].xy.x * w + x , markers[i].xy.y * h + y, 10);
+	}
 	ofPopStyle();
 }
 
 vector<ofVec2f> Chessboard::getProjectionSpaceCorners() const {
 	
-	vector<ofVec2f> corners;
+	vector<ofVec2f> out;
 	
-	ofVec2f step = scale * ofVec2f(2.0f / float(squaresX),
-									 2.0f / float(squaresY));
+	ofVec2f step = ofVec2f(2.0f / float(squaresX),
+						   2.0f / float(squaresY));
 	
-	ofVec2f inset = ofVec2f(1.0f - scale, 1.0f - scale);
+	ofVec2f inset = ofVec2f(-1.0f, 1.0f);
 	
-	for (int i=1; i<squaresX; ++i)
-		for (int j=1; j<squaresY; ++j) {
-			corners.push_back(inset + step * ofVec2f(i, j));
+	ofVec2f corner, xyPix;
+	for (int j=1; j<squaresY; ++j)
+		for (int i=1; i<squaresX; ++i) {
+			corner = inset + step * ofVec2f(i, -j);
+			corner *= scale;
+			xyPix.x = (corner.x + 1.0f) / 2.0f * 1280;
+			xyPix.y = (1.0f - corner.y) / 2.0f * 800; 
+			
+			out.push_back(xyPix);
 		}
-	
-	return corners;
+
+	return out;
 }
 
 bool Chessboard::findCorners(ofPixels &image, vector<ofVec2f> &points) const {

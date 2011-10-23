@@ -10,11 +10,11 @@
 #include "OpenNI2ViewNode.h"
 
 #include "CorrelateXYZtoXY.h"
-
 class testApp : public ofBaseApp{
 
 public:
 	testApp();
+	
 	
 	void setup();
 	void update();
@@ -54,7 +54,9 @@ protected:
 	scrDraw2D		scrPreviewBoard;
 	scrDraw2D		scrPreviewRGB;
 	scrDraw3D		scrKinectView;
-	scrWidgets		scrControl;
+	scrGroupTabbed	scrControls;
+	scrWidgets		scrCaptureControls;
+	scrWidgets		scrCVFlags;
 	
 	wdgSlider		wdgScale;
 	wdgButton		wdgWhiteBackground;
@@ -62,6 +64,7 @@ protected:
 	wdgButton		wdgCapture;
 	wdgSlider		wdgCursor;
 	wdgSlider		wdgError;
+	wdgButton		wdgClear;
 	//
 	//////////////////
 	
@@ -72,6 +75,8 @@ protected:
 	//
 	void	drawFoundCorners2D(ofRectangle &r);
 	void	drawFoundCorners3D(ofNode &n);
+	
+	void drawProjection(ofRectangle &r);
 	
 	Chessboard			board;
 	vector<ofVec2f>		projectedCornersP;
@@ -87,8 +92,10 @@ protected:
 	//
 	void				capture();
 	
-	CorrelateXYZtoXY	correlation;
+	CorrelateXYZtoXY	calibrate;
+	
 	bool				showMarkers;
+	bool				showPastFinds;
 	//
 	//////////////////
 };

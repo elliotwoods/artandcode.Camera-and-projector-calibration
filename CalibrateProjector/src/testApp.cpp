@@ -6,31 +6,44 @@ kinectView(kinect),
 scrPreviewBoard("Chessboard preview", board),
 scrPreviewRGB("RGB camera", kinect.getRGBTextureReference()),
 scrKinectView("Kinect", kinectView),
+scrControls("Controls"),
+scrCVFlags("CV flags"),
 
 wdgScale("Chessboard scale", board.scale, 0, 1.0f, 0.01f),
 wdgWhiteBackground("White background", board.whiteBackground),
 wdgBrightness("Brightness", board.brightness, 0, 1.0f, 0.01f),
 wdgCapture("Capture"),
 wdgCursor("World cursor", worldCursor, -3.0f, 3.0f, 0.01f, "m"),
-wdgError("Reprojection error", correlation.error, 0, 200, 0.01f, "pixels") {
-	scrMain.push(scrControl);
+wdgError("Reprojection error", calibrate.error, 0, 200, 0.01f, "pixels"),
+wdgClear("Clear")
+{
+	scrMain.push(scrControls);
 	scrMain.push(scrPreviewBoard);
 	scrMain.push(scrPreviewRGB);
 	scrMain.push(scrKinectView);
 	
-	scrControl.push(wdgScale);
-	scrControl.push(wdgWhiteBackground);
-	scrControl.push(wdgBrightness);
-	scrControl.push(wdgCapture);
-	scrControl.push(wdgCursor);
-	scrControl.push(wdgError);
-	scrControl.push(new wdgCounter("Datapoints", correlation.count));
+	scrControls.push(scrCaptureControls);
+	scrControls.push(scrCVFlags);
+	
+	scrCaptureControls.push(wdgScale);
+	scrCaptureControls.push(wdgWhiteBackground);
+	scrCaptureControls.push(wdgBrightness);
+	scrCaptureControls.push(wdgCapture);
+	scrCaptureControls.push(wdgCursor);
+	scrCaptureControls.push(wdgError);
+	scrCaptureControls.push(new wdgCounter("Datapoints", calibrate.count));
 	wdgError.enabled = false;
-	scrControl.push(new wdgButton("Reproject chess", showMarkers));
-
-	showMarkers = false;
+	scrCaptureControls.push(new wdgButton("Reproject chess", showMarkers));
+	scrCaptureControls.push(wdgClear);
+	scrCaptureControls.push(new wdgButton("Show past finds", showPastFinds));
+	
+	map<string, bool>::iterator it;
+	for (it = calibrate.cvParameters.begin(); it != calibrate.cvParameters.end(); it++) {
+		scrCVFlags.push(new wdgButton(it->first, it->second));
+	}
 	
 	wdgCapture.setHotKey(' ');
+	wdgClear.setHotKey('c');
 }
 
 //--------------------------------------------------------------
@@ -49,8 +62,12 @@ void testApp::setup(){
 	ofAddListener(scrPreviewRGB.evtDraw, this, &testApp::drawFoundCorners2D);
 	ofAddListener(scrKinectView.evtDraw3D, this, &testApp::drawFoundCorners3D);
 	ofAddListener(scrPreviewRGB.evtMousePressed, this, &testApp::pipetRGB);
+	ofAddListener(scrPreviewBoard.evtDraw, this, &testApp::drawProjection);
 	
 	scrKinectView.getNodeReference().pan(180.0f);
+	
+	showMarkers = true;
+	showPastFinds = false;
 }
 
 //--------------------------------------------------------------
@@ -64,21 +81,26 @@ void testApp::update(){
 	if (wdgCapture.getBang())
 		capture();
 	
-	if (showMarkers) {
-		vector<ofVec3f>::iterator it;
+	if (wdgClear.getBang())
+		calibrate.clear();
+	
+	if (showMarkers && calibrate.ready) {
+		vector<Point3f>::iterator it;
 		int iMarker = 0;
-		for (it = foundCornersW.begin(); it != foundCornersW.end(); ++it) {
+		
+		vector<Point3f> &xyzMarkers(showPastFinds ? calibrate.xyz : *(vector<Point3f>*)&foundCornersW);
+		for (it = xyzMarkers.begin(); it != xyzMarkers.end(); ++it) {
 			board.markers[iMarker].enabled = true;
-			board.markers[iMarker].xy = correlation.project(*it);
-			if (iMarker++ >= 10)
+			board.markers[iMarker].xy = calibrate.project(*it) / calibrate.projectorResolution;
+			if (++iMarker >= MAX_MARKERS)
 				break;
 		}
 	} else {
-		for (int i=0; i<10; ++i) {
+		for (int i=0; i<MAX_MARKERS; ++i) {
 			board.markers[i].enabled = false;
 		}
 	}
-	
+
 	if (wdgScale.isValueNew() || wdgWhiteBackground.isValueNew() || wdgBrightness.isValueNew() || showMarkers || ofGetFrameNum() % 10 == 0) {
 		TalkyMessage msg;
 		msg << board;
@@ -88,7 +110,6 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
 }
 
 //--------------------------------------------------------------
@@ -153,10 +174,11 @@ void testApp::drawFoundCorners3D(ofNode &n){
 	//////////////
 	//
 	ofPushStyle();
-	correlation.draw();	
+	calibrate.draw();	
 	ofPopStyle();
 	//
 	//////////////
+	
 	
 	//////////////
 	// Cursor
@@ -177,12 +199,42 @@ void testApp::drawFoundCorners3D(ofNode &n){
 }
 
 //--------------------------------------------------------------
+void testApp::drawProjection(ofRectangle &r) {
+	
+	ofPushStyle();
+	ofNoFill();
+	
+	Point2f xyProjector, xyInView;
+	for (int i=0; i<calibrate.xy.size(); i++) {
+		xyProjector = calibrate.xy[i];
+		xyInView.x = r.x + r.width * xyProjector.x / calibrate.projectorResolution.x;
+		xyInView.y = r.y + r.height * xyProjector.y / calibrate.projectorResolution.y;
+		ofCircle(xyInView.x,xyInView.y , 10);
+	}
+	
+	ofPopStyle();
+//	
+//	ofPushView();
+//	
+//	calibrate.intrinsics.loadProjectionMatrix(0.1);
+//	
+//	for (int i=0; i<foundCornersW.size(); i++) {
+//		ofPushMatrix();
+//		ofTranslate(foundCornersW[i]);
+//		ofSphere(0.01);
+//		ofPopMatrix();
+//	}
+//	
+//	ofPopView();
+}
+
+//--------------------------------------------------------------
 void testApp::capture() {
 	projectedCornersP = board.getProjectionSpaceCorners();
 	
 	for (int i=0; i<foundCornersC.size(); ++i)
-		if (foundCornersW[i].length() > 0.5f)
-			correlation.push(foundCornersW[i], projectedCornersP[i]);
+		if (foundCornersW[i].length() > 0.1f)
+			calibrate.push(foundCornersW[i], projectedCornersP[i]);
 	
-	correlation.correlate();
+	calibrate.correlate();
 }
