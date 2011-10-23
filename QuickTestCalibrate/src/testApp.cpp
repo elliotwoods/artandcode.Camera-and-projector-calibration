@@ -6,12 +6,17 @@ void testApp::setup(){
     calibrated = false;
     videoLoaded = false;
     
+    videoFrameUpdated = false;
+    depthFrameUpdated = false;
+
     currentCloud = new unsigned short[640*480];
     cam.speed = 5;
     cam.autosavePosition = true;
     cam.useArrowKeys = false;
     cam.loadCameraPosition();
     cam.setScale(1, -1, 1);
+
+    meshViewer.setScale(1, -1, 1);
     ofBackground(75);
     
     //testImage.loadImage("MVI_9301.MOV.png");
@@ -37,7 +42,7 @@ void testApp::setup(){
     
     settingsSaveFile = "settings.xml";
     if(recentSaves.loadFile(settingsSaveFile)){
-        cout << "preloading video " << 
+        cout << "preloading video " << recentSaves.getValue("videoFile", "") << endl;
         loadVideoFile(recentSaves.getValue("videoFile", ""));
         pointClouds.allowExt("xkcd");
         pointClouds.listDir(recentSaves.getValue("cloudFolder", ""));
@@ -49,11 +54,25 @@ void testApp::setup(){
     }
     fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB, 4);
     pixels.allocate(ofGetWidth(), ofGetHeight(), OF_IMAGE_COLOR);
+    
+    
+//    gui.addSlider("");
+    gui.addSlider("z threshold", alignment.zthresh, -2, 2);
+    gui.addSlider("z cam offset", zCamOffset, 750, 1750);
+    gui.addSlider("y cam offset", yCamOffset, 0, 1500);
+    gui.addSlider("y cam rot", yCamRot, 0, 1500);
+    gui.addSlider("cam pull", camPullOut, 10, 1500);
+
+    videoOffset = 0;
+    depthOffset = 0;
+
+    gui.loadFromXML();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-//    image.loadImage("calibration/external/MVI_9292.MOV.png");
+    
+    //image.loadImage("calibration/external/MVI_9292.MOV.png");
     //image.loadImage("testimage.jpg");
     
     if(calibrationLoaded){
@@ -63,8 +82,6 @@ void testApp::update(){
     
     calibrated = alignment.ready();
     if(loaded && calibrated && videoLoaded){
-        bool videoFrameUpdated = false;
-        bool depthFrameUpdated = false;
         if(scrubbing){
             if(frameASet && frameBSet){
                 float scrubPercent = ofMap(mouseX, 0, ofGetWidth(), 0, 1.0);    
@@ -73,15 +90,15 @@ void testApp::update(){
                 videoFrameUpdated = depthFrameUpdated = true;
             }
             else if(scrubVideo) {
-                currentVideoFrame = ofMap(mouseX, 0, ofGetWidth(), 0, video.getTotalNumFrames()-1, true);
+                currentVideoFrame = ofMap(mouseX, 0, ofGetWidth(), 0, video.getTotalNumFrames()-1, true) + videoOffset;
                 videoFrameUpdated = true;
             }
             else {
-                currentDepthFrame = ofMap(mouseX, 0, ofGetWidth(), 0, pointClouds.numFiles()-1, true);
+                currentDepthFrame = ofMap(mouseX, 0, ofGetWidth(), 0, pointClouds.numFiles()-1, true) + depthOffset;
                 depthFrameUpdated = true;
             }   
         }
-        if(playing){ 
+        else if(playing){ 
             currentDepthFrame++; 
             currentVideoFrame++;
             videoFrameUpdated = depthFrameUpdated = true;
@@ -92,11 +109,13 @@ void testApp::update(){
             video.update();
             testImage.setFromPixels(video.getPixelsRef());            
             alignment.setColorImage(testImage);
+            videoFrameUpdated = false;
         }
             
         if(depthFrameUpdated){
             decoder.readDepthFrame(pointClouds.getPath( currentDepthFrame ), currentCloud );
             //cout << "current depth frame is " << currentDepthFrame << endl;
+            depthFrameUpdated = false;
         }
         
         alignment.updatePointCloud(currentCloud, 640, 480);
@@ -108,30 +127,34 @@ void testApp::draw(){
     
     fbo.begin();{
         ofClear(75,75,75);
+        glEnable(GL_DEPTH_TEST);
         
         if(loaded && calibrated && videoLoaded){
-            ofVec3f spinVec(1,0,0);
-            //spinVec.rotate(ofGetMouseY()/2.0, ofVec3f(0,1,0));
-            meshViewer.setPosition( spinVec * ofGetMouseX() );
-            cout << " center! " << alignment.getMeshCenter() << endl;
-                                   meshViewer.lookAt(alignment.getMeshCenter());
-            meshViewer.lookAt(ofVec3f(0,0,0));
-            cout << "cam pos " << cam.getPosition() << endl;
+            if(!scrubbing){
+                ofVec3f spinVec(1,0,0);
+                spinVec.rotate(yCamRot, ofVec3f(0,1,0));
+                meshViewer.setPosition( spinVec * camPullOut + ofVec3f(0,yCamOffset,zCamOffset) );
+                meshViewer.lookAt(ofVec3f(0,yCamOffset,zCamOffset));
+            }
+            if(ofGetFrameNum() % 100 == 0){
+                cout << " center! " << alignment.getMeshCenter() << endl;
+                cout << " cam ! " << meshViewer.getPosition() << endl;
+            }
+            
         }
-        
-        fbo.begin();
-        ofClear(75, 75, 75);
-        
+                
         meshViewer.begin();
+        ofBox(ofVec3f(0,0,0), 10);
         if(loaded && calibrated && videoLoaded){
-            //alignment.drawPointCloud();
-            alignment.drawMesh();
+            alignment.drawPointCloud();
+//            alignment.drawMesh();
         }
         
         if(calibrated && !loaded){
             alignment.drawCalibration(mouseX > ofGetWidth()/2);
         }
         meshViewer.end();    
+        glDisable(GL_DEPTH_TEST);
     } fbo.end();
     
     fbo.getTextureReference().draw(0,0);    
@@ -145,9 +168,14 @@ void testApp::draw(){
     ofSetColor(255, 255, 255);
     
     string debugString = string("scrubbing? ") + (scrubbing ? "YES" : "NO") + "\n";
+    debugString += string("calibrated? ") + (calibrated ? "YES" : "NO") + "\n";
+    debugString += string("loaded? ") + (loaded ? "YES" : "NO") + "\n";
+    debugString += string("videoLoaded? ") + (videoLoaded ? "YES" : "NO") + "\n";
     debugString += string("scrubbing video? ") + (scrubVideo ? "YES" : "NO") + "\n";
     debugString += string("current video frame ") + ofToString(currentVideoFrame) + "\n";
     debugString += string("current depth frame ") + ofToString(currentDepthFrame) + "\n";
+    debugString += string("frame A set + frame B set ") + (frameASet ? "YES" : "NO") + " " + (frameBSet ? "YES" : "NO") + "\n";
+
     ofDrawBitmapString(debugString, ofPoint(30,30));
     
     if(playing){
@@ -161,6 +189,8 @@ void testApp::draw(){
         sprintf(pixname, "outframes/%s/FRAME_%05d.png",xmlSaveFile.c_str(), ofGetFrameNum());
         ofSaveImage(pixels, pixname);
     }
+    
+    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -227,8 +257,8 @@ void testApp::keyPressed(int key){
     
     if(videoLoaded && loaded && calibrated){
         if(key == '1'){
-            depthFrameA = currentDepthFrame;
-            videoFrameA = currentVideoFrame;
+            depthFrameA = currentDepthFrame+depthOffset;
+            videoFrameA = currentVideoFrame+videoOffset;
             frameASet = true;
             videosave.setValue("depthFrameA", depthFrameA);
             videosave.setValue("videoFrameA", videoFrameA);
@@ -237,8 +267,8 @@ void testApp::keyPressed(int key){
         }
         
         if(key == '2'){
-            depthFrameB = currentDepthFrame;
-            videoFrameB = currentVideoFrame;
+            depthFrameB = currentDepthFrame+depthOffset;
+            videoFrameB = currentVideoFrame+videoOffset;
             frameBSet = true;
             videosave.setValue("depthFrameB", depthFrameB);
             videosave.setValue("videoFrameB", videoFrameB);
@@ -283,6 +313,34 @@ void testApp::keyPressed(int key){
     
     if(key == '/'){
         scrubbing = !scrubbing;
+    }
+    
+    if(key == 'g'){
+        gui.toggleDraw();
+    }
+    
+    if( (!frameASet || !frameBSet) && scrubbing){
+        if(key == OF_KEY_LEFT){
+            if(scrubVideo){
+                videoOffset--;
+                videoFrameUpdated = true;
+            }
+            else{
+                depthOffset--;
+                depthFrameUpdated = true;
+            }
+        }
+        
+        if(key == OF_KEY_RIGHT){
+            if(scrubVideo){
+                videoOffset++;
+                videoFrameUpdated = true;
+            }
+            else{
+                depthOffset++;
+                depthFrameUpdated = true;
+            }
+        }
     }
 
 }

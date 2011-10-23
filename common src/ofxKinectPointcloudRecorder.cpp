@@ -103,7 +103,7 @@ unsigned short* ofxKinectPointcloudRecorder::readDepthFrame(ofFile infile,  unsi
 //        cout << i << " " << outbuf[i] << endl;
     }
     
-    cout << "last lines sum " << lastlinesum << endl;
+//    cout << "last lines sum " << lastlinesum << endl;
     
 	infile.close();
 	return outbuf;

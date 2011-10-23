@@ -41,16 +41,14 @@ void ofxRGBDAlignment::setup(int squaresWide, int squaresTall, int squareSize) {
 	colorCalibration.setPatternSize(squaresWide, squaresTall);
 	colorCalibration.setSquareSize(squareSize);
 	
-	mesh.setUsage(GL_STREAM_DRAW);
+//	mesh.setUsage(GL_STREAM_DRAW);
 	int width = 640;
-	int height = 240;
+	int height = 480;
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
 			mesh.addVertex(ofPoint(x,y,0));	// mesh index = x + y*width
-			// this replicates the pixel array within the camera bitmap...
-			//mesh.addColor(ofFloatColor(0,0,0));  // placeholder for colour data, we'll get this from the camera
 			mesh.addTexCoord(ofVec2f(0,0));
-			mesh.addColor(ofFloatColor(0,0,0));
+			//mesh.addColor(ofFloatColor(0,0,0));
 		}
 	}
 }
@@ -194,20 +192,23 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 	ofVec3f center(0,0,0);
 	for(int y = 0; y < h; y++) {
 		for(int x = 0; x < w; x++) {
+
 			//float pixel = rawToCentimeters( currentDepthImage[y*w+j] );
             unsigned short z = currentDepthImage[y*w+x];
-			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
-			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
-			
-			// add each point into pointCloud
-			pointCloud.push_back(Point3f(xReal, yReal, z));
-            //pointCloud.push_back(Point3f(x/640.0, y/640., 0));
-            center += ofVec3f(xReal, yReal, z);
-            validPointCount++;
+            float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
+            float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
+            // add each point into pointCloud
+            pointCloud.push_back(Point3f(xReal, yReal, z));
+            if(z > 1){
+                //pointCloud.push_back(Point3f(x/640.0, y/640., 0));
+                center += ofVec3f(xReal, yReal, z);
+                validPointCount++;
+            }
 		}
 	}
-
-    //cout << validPointCount << " vertices added " << endl;
+    if(ofGetFrameNum() % 100 == 0){
+        cout << validPointCount << " vertices added " << endl;
+    }
     
     meshCenter = center / validPointCount;
 	meshDistance = 0;
@@ -219,6 +220,8 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 			meshDistance = thisDistance;
 		}
 	}
+    
+    cout << "mesh center " <<  meshCenter << endl;
 
 		
 /*
@@ -233,72 +236,9 @@ void ofxRGBDAlignment::updatePointCloud(unsigned short* depthPixelsRaw, int w, i
 */
 	
 
-//	updateColors();
-	//updateColors();
+	updateColors();
     updateMesh();
 }
-
-//void ofxRGBDAlignment::updatePointCloud() {
-	
-	/*
-	pointCloud.clear();
-	
-	const unsigned int Xres = 640;
-	const unsigned int Yres = 480;
-	
-	Point2d fov = depthCalibration.getUndistortedIntrinsics().getFov();
-	float fx = tanf(ofDegToRad(fov.x) / 2) * 2;
-	float fy = tanf(ofDegToRad(fov.y) / 2) * 2;
-	
-	Point2d principalPoint = depthCalibration.getUndistortedIntrinsics().getPrincipalPoint();
-	cv::Size imageSize = depthCalibration.getUndistortedIntrinsics().getImageSize();
-	
-	int w = Xres;
-	int h = Yres;
-	
-	//cout << " calculated image size " << imageSize.width << " x " << imageSize.height << endl;
-	
-	//	int w = curKinect.getWidth();
-	//	int h = curKinect.getHeight();
-	//	float* pixels = curKinect.getPixels();
-	
-	int validPointCount = 0;
-	ofVec3f center(0,0,0);
-	for(int y = 0; y < h; y++) {
-		for(int j = 0; j < w; j++) {
-			float pixel = currentDepthImage[y*w+j];
-			int x = j;
-			float z = rawToCentimeters(pixel);
-			
-			float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
-			float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
-			
-			// add each point into pointCloud
-			pointCloud.push_back(Point3f(xReal, yReal, z));
-			if(z != 0){				
-				center += ofVec3f(xReal, yReal, z);
-				validPointCount++;
-			}
-		}
-	}
-	
-	//cout << " i ended up at " << i << endl;
-	
-	meshCenter = center / validPointCount;
-	meshDistance = 0;
-	for(int i = 0; i < pointCloud.size(); i++){
-		float thisDistance = center.distance(ofVec3f(pointCloud[i].x,
-													 pointCloud[i].y,
-													 pointCloud[i].z));
-		if(thisDistance > meshDistance){
-			meshDistance = thisDistance;
-		}
-	}
-
-//	cout << "mesh center " << meshCenter << " distance " << meshDistance << endl; 
-	 */
-	
-//}
 
 void ofxRGBDAlignment::updateMesh() {
 	
@@ -318,35 +258,50 @@ void ofxRGBDAlignment::updateMesh() {
 				  imagePoints);
 	
 	int w = 640;
-	int h = 240;
+	int h = 480;
+    texcoords.clear();
+    vertices.clear();
 	for(int i = 0; i < imagePoints.size(); i++) {
 		ofVec2f textureCoord = ofVec2f(imagePoints[i].x,imagePoints[i].y);
 		int j = (int)imagePoints[i].y * currentColorImage.getWidth() + (int) imagePoints[i].x;
 		ofFloatColor color;
 		color = ofFloatColor(1, 1, 1, 1);		
-		mesh.setColor(i, color);
+        vertices.push_back( toOf(pointCloud[i]) );
+        texcoords.push_back( textureCoord );
+        
+		//mesh.setColor(i, color);
 		mesh.setTexCoord(i, textureCoord);
-		mesh.setVertex(i, toOf(pointCloud[i]) - meshCenter);
+		mesh.setVertex(i, toOf(pointCloud[i]));
 	}
     
 	int facesAdded = 0;
 	mesh.clearIndices();
+    indeces.clear();
+    zthresh = .3;
 	for (int y = 0; y < h-1; y++){
 		for (int x=0; x < w-1; x++){
-			if(pointCloud[x+y*w].z > 1 &&
-			   pointCloud[(x+1)+y*w].z > 1 &&
-			   pointCloud[x+(y+1)*w].z > 1)
+			if(pointCloud[x+y*w].z > zthresh ||
+			   pointCloud[(x+1)+y*w].z > zthresh ||
+			   pointCloud[x+(y+1)*w].z > zthresh)
 			{
+                indeces.push_back(x+y*w);
+                indeces.push_back((x+1)+y*w);
+                indeces.push_back(x+(y+1)*w);
+                
 				mesh.addIndex(x+y*w);				// 0
 				mesh.addIndex((x+1)+y*w);			// 1
 				mesh.addIndex(x+(y+1)*w);			// 10				
 				facesAdded++;
 			}
 			
-			if(pointCloud[(x+1)+y*w].z > 1 &&
-			   pointCloud[x+(y+1)*w].z > 1 &&
-			   pointCloud[(x+1)+(y+1)*w].z > 1)
+			if(pointCloud[(x+1)+y*w].z > zthresh ||
+			   pointCloud[x+(y+1)*w].z > zthresh ||
+			   pointCloud[(x+1)+(y+1)*w].z > zthresh)
 			{
+                indeces.push_back((x+1)+y*w);
+                indeces.push_back(x+(y+1)*w);
+                indeces.push_back((x+1)+(y+1)*w);
+                
 				mesh.addIndex((x+1)+y*w);			// 1
 				mesh.addIndex(x+(y+1)*w);			// 10
 				mesh.addIndex((x+1)+(y+1)*w);		// 11
@@ -354,8 +309,14 @@ void ofxRGBDAlignment::updateMesh() {
 			}
 		}
 	}
-	
-	cout << "faces added " << facesAdded << endl;
+
+//    vbo.setIndexData(&indeces[0], indeces.size(), GL_STREAM_DRAW);
+//    vbo.setVertexData(&vertices[0], vertices.size(), GL_STREAM_DRAW);
+//    vbo.setTexCoordData(&texcoords[0], texcoords.size(), GL_STREAM_DRAW);
+    
+    if(ofGetFrameNum() % 100 == 0){
+        cout << "faces added " << facesAdded << endl;
+    }
 }
 
 /*
@@ -403,7 +364,7 @@ void ofxRGBDAlignment::updateColors() {
 		int j = (int) imagePoints[i].y * w + (int) imagePoints[i].x;
 		//pointCloudColors.push_back(Point3f(1, 1, 1));
 		if(j < 0 || j >= n) {
-			pointCloudColors.push_back(Point3f(1, 0, 0));
+			pointCloudColors.push_back(Point3f(0, 0, 0));
 		} else {
 			j *= 3;
 			pointCloudColors.push_back(Point3f(pixels[j + 0] / 255.f, pixels[j + 1] / 255.f, pixels[j + 2] / 255.f));
@@ -435,10 +396,12 @@ void ofxRGBDAlignment::drawMesh() {
 	glEnable(GL_DEPTH_TEST);
 	currentColorImage.getTextureReference().bind();
 	mesh.drawFaces();
+    //vbo.drawElements(GL_TRIANGLES, indeces.size()/3);
 	currentColorImage.getTextureReference().unbind();
 	glDisable(GL_DEPTH_TEST);
 	
 	glPopMatrix();
+
 
 }
 
@@ -447,18 +410,21 @@ void ofxRGBDAlignment::drawPointCloud() {
 	ofPushStyle();
 	
 	ofSetColor(255);
-	
+	glPointSize(2);
+    
 	glPushMatrix();
 	glScaled(1, -1, 1);
 	
 	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
+    
 	glColorPointer(3, GL_FLOAT, sizeof(Point3f), &(pointCloudColors[0].x));
 	glVertexPointer(3, GL_FLOAT, sizeof(Point3f), &(pointCloud[0].x));
-
+                   
 	glDrawArrays(GL_POINTS, 0, pointCloud.size());
-	glDisableClientState(GL_COLOR_ARRAY);
+    
+    glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
 	glDisable(GL_DEPTH_TEST);

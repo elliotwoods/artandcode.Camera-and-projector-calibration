@@ -45,7 +45,8 @@ class ofxRGBDAlignment {
     
 	ofVec3f getMeshCenter();
 	float getMeshDistance();
-	
+	float zthresh;
+    
   protected:
 	bool hasDepthImage;
 	bool hasColorImage;
@@ -66,9 +67,14 @@ class ofxRGBDAlignment {
 	vector<Point2f> imagePoints;
 	vector<Point3f> pointCloud;
 	vector<Point3f> pointCloudColors;
-	
+
+    
 	ofVboMesh mesh;
-	
+	ofVbo vbo;
+    vector<ofIndexType> indeces;
+    vector<ofVec2f> texcoords;
+    vector<ofVec3f> vertices;
+
 	Calibration depthCalibration, colorCalibration;    
 	Mat rotationDepthToColor, translationDepthToColor;
 	Mat rotationColorToDepth, translationColorToDepth;

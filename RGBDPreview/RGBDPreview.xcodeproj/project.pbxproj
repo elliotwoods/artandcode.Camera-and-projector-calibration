@@ -948,8 +948,8 @@
 				E7C4A300144DC38B006A94E4 /* Ray.cpp */,
 				E7C4A2FE144DC34C006A94E4 /* CameraHead.h */,
 				E7C4A2FD144DC34C006A94E4 /* CameraHead.cpp */,
-				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
 				E744B07F144FC1CE00F67D84 /* scrGameView3D.h */,
+				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
 			);
 			name = "shared source";
 			sourceTree = "<group>";
@@ -1408,6 +1408,7 @@
 			isa = PBXProject;
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "RGBDPreview" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,

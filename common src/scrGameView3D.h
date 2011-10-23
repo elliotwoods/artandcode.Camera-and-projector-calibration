@@ -28,5 +28,6 @@ class scrGameView3D : public scrBase
 protected:
 	virtual void	drawContent();
 		
-	ofxGameCamera	camera;
+	//ofxGameCamera	camera;
+    ofCamera camera;
 };

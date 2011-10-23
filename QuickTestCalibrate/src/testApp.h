@@ -8,6 +8,8 @@
 #include "ofxXmlSettings.h"
 #include "ofxCvCheckerboardPreview.h"
 
+#include "ofxSimpleGuiToo.h"
+
 using namespace ofxCv;
 using namespace cv;
 
@@ -30,7 +32,6 @@ class testApp : public ofBaseApp{
     
     void loadVideoFile(string filePath);
 
-    
     ofImage testImage;
     ofxRGBDAlignment alignment;
     ofxKinectPointcloudRecorder decoder;
@@ -44,7 +45,7 @@ class testApp : public ofBaseApp{
     ofVideoPlayer video;
     
     //GUI stuff
-    ofxCVgui* gui;
+//    ofxCVgui* gui;
     ofCamera meshViewer;
     unsigned short* currentCloud;
     ofImage image;
@@ -80,5 +81,15 @@ class testApp : public ofBaseApp{
 	ofFbo fbo;
 	ofPixels pixels;
 
-
+    float zCamOffset;
+    float yCamOffset;
+    float yCamRot;
+    float camPullOut;
+    float noiseThreshold;
+    
+    bool videoFrameUpdated;
+    bool depthFrameUpdated;
+    
+    int videoOffset;
+    int depthOffset;
 };

@@ -129,8 +129,8 @@ void testApp::drawOnCamera(ofRectangle& drawRect){
 }
 
 void testApp::drawOnPoint(ofNode& drawNode){
-	//depthRGBAlignment.drawPointCloud();
-	depthRGBAlignment.drawMesh();
+	depthRGBAlignment.drawPointCloud();
+	//depthRGBAlignment.drawMesh();
 }
 
 //--------------------------------------------------------------
