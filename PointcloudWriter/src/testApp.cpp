@@ -106,14 +106,13 @@ void testApp::keyPressed(int key){
 
 	if(key == 'l'){
 		ofDirectory d("depthframes");
-		d.allowExt("tga");
+		d.allowExt("xkcd");
 		d.listDir();
-		vector<ofFile> files = d.getFiles();
 		frameRead = true;
 //		for(int f = 0; f < files.size(); f++){
 		for(int f = 0; f < 1; f++){			
 			vector<ofVec3f> cloud;
-			unsigned short* frame = recorder.readDepthFrame(files[f].getFileName());
+			unsigned short* frame = recorder.readDepthFrame(d.getName(f));
 			for(int y = 0; y < 480; y++){
 				for(int x = 0; x < 640; x++){
 					cout << frame[y*640+x] << endl;

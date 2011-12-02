@@ -22,7 +22,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	if (fullscreen)
-		vidGrabber.draw(0,0,ofGetWidth(), ofGetHeight());
+		vidGrabber.draw(ofGetWidth(),0,-ofGetWidth(), ofGetHeight());
 	else
 		vidGrabber.draw(0,0);
 }

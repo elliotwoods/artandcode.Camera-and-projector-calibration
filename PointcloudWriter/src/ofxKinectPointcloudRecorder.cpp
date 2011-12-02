@@ -65,7 +65,7 @@ void ofxKinectPointcloudRecorder::threadedFunction(){
 //			}
 //			
 			
-			string filename = targetDirectory + "/" + targetFilePrefix + "_" + ofToString(currentFrame) +  ".tga";
+			string filename = targetDirectory + "/" + targetFilePrefix + "_" + ofToString(currentFrame) +  ".xkcd";
 			ofFile file(filename, ofFile::WriteOnly, true);
 //			int size = newpoints.size();
 //			file.write( (char*)&size, sizeof(int) );
