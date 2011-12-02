@@ -65,7 +65,7 @@ void ofxCvCheckerboardPreview::draw(const ofRectangle& rect){
 	float alpha = ofMap(ofGetElapsedTimef(), boardLastFoundTime+.5, boardLastFoundTime+2, 255, 0, true);
 	
 	ofPushStyle();
-	ofSetColor(255, 255,255, alpha);
+	ofSetColor(255, 0,0, alpha);
 	
 	float x, y;
 	for (int i = 0; i < imagePoints.size(); ++i) {

@@ -81,11 +81,11 @@
 		E7C596E5144F59D9001561A3 /* ofxEdsdk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596D2144F59D9001561A3 /* ofxEdsdk.cpp */; };
 		E7C59723144F5DD7001561A3 /* DPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7C596BD144F59D9001561A3 /* DPP.framework */; };
 		E7C59724144F5DD7001561A3 /* EDSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7C596BE144F59D9001561A3 /* EDSDK.framework */; };
-		E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */; };
 		E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AED144E60200065E4C0 /* tinyxml.cpp */; };
 		E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */; };
 		E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */; };
 		E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */; };
+		F386FE911450815C007BEF51 /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F386FE881450815B007BEF51 /* ofxGameCamera.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -368,8 +368,6 @@
 		E7C596D2144F59D9001561A3 /* ofxEdsdk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEdsdk.cpp; sourceTree = "<group>"; };
 		E7C596D3144F59D9001561A3 /* ofxEdsdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEdsdk.h; sourceTree = "<group>"; };
 		E7C596D4144F59D9001561A3 /* RateTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RateTimer.h; sourceTree = "<group>"; };
-		E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
-		E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
 		E7CA4AEB144E60200065E4C0 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E7CA4AED144E60200065E4C0 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E7CA4AEE144E60200065E4C0 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -377,6 +375,8 @@
 		E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		F386FE881450815B007BEF51 /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
+		F386FE891450815B007BEF51 /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -718,10 +718,10 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				F386FE741450815B007BEF51 /* ofxGameCamera */,
 				E7C5965F144F59D8001561A3 /* ofxEdsdk */,
 				E7C5928E144F1F5C001561A3 /* ofxKinect */,
 				E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */,
-				E7CA4A35144E60070065E4C0 /* ofxGameCamera */,
 				E7C4A305144DC3A3006A94E4 /* ofxCVgui */,
 				2705B337143D6DA300F2A09E /* ofxCv */,
 			);
@@ -948,8 +948,8 @@
 				E7C4A300144DC38B006A94E4 /* Ray.cpp */,
 				E7C4A2FE144DC34C006A94E4 /* CameraHead.h */,
 				E7C4A2FD144DC34C006A94E4 /* CameraHead.cpp */,
-				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
 				E744B07F144FC1CE00F67D84 /* scrGameView3D.h */,
+				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
 			);
 			name = "shared source";
 			sourceTree = "<group>";
@@ -1330,24 +1330,6 @@
 			path = EdsWrapper;
 			sourceTree = "<group>";
 		};
-		E7CA4A35144E60070065E4C0 /* ofxGameCamera */ = {
-			isa = PBXGroup;
-			children = (
-				E7CA4AD0144E60080065E4C0 /* src */,
-			);
-			name = ofxGameCamera;
-			path = ../../../addons/ofxGameCamera;
-			sourceTree = SOURCE_ROOT;
-		};
-		E7CA4AD0144E60080065E4C0 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */,
-				E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1375,6 +1357,24 @@
 			children = (
 				E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */,
 				E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		F386FE741450815B007BEF51 /* ofxGameCamera */ = {
+			isa = PBXGroup;
+			children = (
+				F386FE871450815B007BEF51 /* src */,
+			);
+			name = ofxGameCamera;
+			path = ../../../addons/ofxGameCamera;
+			sourceTree = "<group>";
+		};
+		F386FE871450815B007BEF51 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F386FE881450815B007BEF51 /* ofxGameCamera.cpp */,
+				F386FE891450815B007BEF51 /* ofxGameCamera.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1501,7 +1501,6 @@
 				E7C4A38C144DC3A4006A94E4 /* wdgSlider.cpp in Sources */,
 				E7C4A38D144DC3A4006A94E4 /* wdgTransform.cpp in Sources */,
 				E7C4A38E144DC3A4006A94E4 /* wdgXYZ.cpp in Sources */,
-				E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */,
 				E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */,
 				E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */,
 				E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */,
@@ -1520,6 +1519,7 @@
 				E744B07C144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp in Sources */,
 				E744B07D144FC1BC00F67D84 /* ofxRGBDAlignment.cpp in Sources */,
 				E744B080144FC1CE00F67D84 /* scrGameView3D.cpp in Sources */,
+				F386FE911450815C007BEF51 /* ofxGameCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

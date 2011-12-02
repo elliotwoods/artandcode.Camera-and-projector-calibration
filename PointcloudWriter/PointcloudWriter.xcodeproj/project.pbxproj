@@ -65,7 +65,6 @@
 		E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */; };
 		E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */; };
 		E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */; };
-		E7E5EC32144FD8C900675C9C /* ofxKinectPointcloudRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E5EC31144FD8C900675C9C /* ofxKinectPointcloudRecorder.cpp */; };
 		E7E5ECFE144FDBD400675C9C /* cameras.c in Sources */ = {isa = PBXBuildFile; fileRef = E7E5EC9E144FDBD400675C9C /* cameras.c */; };
 		E7E5ECFF144FDBD400675C9C /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = E7E5ECA0144FDBD400675C9C /* core.c */; };
 		E7E5ED00144FDBD400675C9C /* freenect.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E5ECA5144FDBD400675C9C /* freenect.lib */; };
@@ -74,6 +73,7 @@
 		E7E5ED03144FDBD400675C9C /* usb_libusb10.c in Sources */ = {isa = PBXBuildFile; fileRef = E7E5ECAC144FDBD400675C9C /* usb_libusb10.c */; };
 		E7E5ED04144FDBD400675C9C /* usb-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E5ECB4144FDBD400675C9C /* usb-1.0.a */; };
 		E7E5ED05144FDBD400675C9C /* ofxKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E5ECEA144FDBD400675C9C /* ofxKinect.cpp */; };
+		F38677E3145218D80067536D /* ofxKinectPointcloudRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F38677E1145218D80067536D /* ofxKinectPointcloudRecorder.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -283,8 +283,6 @@
 		E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
-		E7E5EC30144FD8C900675C9C /* ofxKinectPointcloudRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinectPointcloudRecorder.h; sourceTree = "<group>"; };
-		E7E5EC31144FD8C900675C9C /* ofxKinectPointcloudRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxKinectPointcloudRecorder.cpp; sourceTree = "<group>"; };
 		E7E5EC9E144FDBD400675C9C /* cameras.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cameras.c; sourceTree = "<group>"; };
 		E7E5EC9F144FDBD400675C9C /* cameras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameras.h; sourceTree = "<group>"; };
 		E7E5ECA0144FDBD400675C9C /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core.c; sourceTree = "<group>"; };
@@ -335,6 +333,8 @@
 		E7E5ECE9144FDBD400675C9C /* ofxBase3DVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBase3DVideo.h; sourceTree = "<group>"; };
 		E7E5ECEA144FDBD400675C9C /* ofxKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxKinect.cpp; sourceTree = "<group>"; };
 		E7E5ECEB144FDBD400675C9C /* ofxKinect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinect.h; sourceTree = "<group>"; };
+		F38677E1145218D80067536D /* ofxKinectPointcloudRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxKinectPointcloudRecorder.cpp; path = "../../common src/ofxKinectPointcloudRecorder.cpp"; sourceTree = "<group>"; };
+		F38677E2145218D80067536D /* ofxKinectPointcloudRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxKinectPointcloudRecorder.h; path = "../../common src/ofxKinectPointcloudRecorder.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -897,8 +897,8 @@
 			children = (
 				E744B07F144FC1CE00F67D84 /* scrGameView3D.h */,
 				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
-				E7E5EC30144FD8C900675C9C /* ofxKinectPointcloudRecorder.h */,
-				E7E5EC31144FD8C900675C9C /* ofxKinectPointcloudRecorder.cpp */,
+				F38677E1145218D80067536D /* ofxKinectPointcloudRecorder.cpp */,
+				F38677E2145218D80067536D /* ofxKinectPointcloudRecorder.h */,
 			);
 			name = "shared source";
 			sourceTree = "<group>";
@@ -1376,13 +1376,13 @@
 				E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */,
 				E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */,
 				E744B080144FC1CE00F67D84 /* scrGameView3D.cpp in Sources */,
-				E7E5EC32144FD8C900675C9C /* ofxKinectPointcloudRecorder.cpp in Sources */,
 				E7E5ECFE144FDBD400675C9C /* cameras.c in Sources */,
 				E7E5ECFF144FDBD400675C9C /* core.c in Sources */,
 				E7E5ED01144FDBD400675C9C /* registration.c in Sources */,
 				E7E5ED02144FDBD400675C9C /* tilt.c in Sources */,
 				E7E5ED03144FDBD400675C9C /* usb_libusb10.c in Sources */,
 				E7E5ED05144FDBD400675C9C /* ofxKinect.cpp in Sources */,
+				F38677E3145218D80067536D /* ofxKinectPointcloudRecorder.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

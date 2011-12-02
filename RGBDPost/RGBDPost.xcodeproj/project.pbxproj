@@ -33,9 +33,7 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E744B07C144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E744B078144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp */; };
 		E744B07D144FC1BC00F67D84 /* ofxRGBDAlignment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E744B07A144FC1BC00F67D84 /* ofxRGBDAlignment.cpp */; };
-		E744B080144FC1CE00F67D84 /* scrGameView3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */; };
 		E7C4A375144DC3A4006A94E4 /* Histogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A33A144DC3A4006A94E4 /* Histogram.cpp */; };
 		E7C4A376144DC3A4006A94E4 /* btnBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A33D144DC3A4006A94E4 /* btnBase.cpp */; };
 		E7C4A377144DC3A4006A94E4 /* GUIAssets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A33F144DC3A4006A94E4 /* GUIAssets.cpp */; };
@@ -62,11 +60,32 @@
 		E7C4A38C144DC3A4006A94E4 /* wdgSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A36E144DC3A4006A94E4 /* wdgSlider.cpp */; };
 		E7C4A38D144DC3A4006A94E4 /* wdgTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A370144DC3A4006A94E4 /* wdgTransform.cpp */; };
 		E7C4A38E144DC3A4006A94E4 /* wdgXYZ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C4A372144DC3A4006A94E4 /* wdgXYZ.cpp */; };
-		E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */; };
+		E7C59357144F1F5C001561A3 /* cameras.c in Sources */ = {isa = PBXBuildFile; fileRef = E7C592F7144F1F5C001561A3 /* cameras.c */; };
+		E7C59358144F1F5C001561A3 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = E7C592F9144F1F5C001561A3 /* core.c */; };
+		E7C59359144F1F5C001561A3 /* freenect.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C592FE144F1F5C001561A3 /* freenect.lib */; };
+		E7C5935A144F1F5C001561A3 /* registration.c in Sources */ = {isa = PBXBuildFile; fileRef = E7C59302144F1F5C001561A3 /* registration.c */; };
+		E7C5935B144F1F5C001561A3 /* tilt.c in Sources */ = {isa = PBXBuildFile; fileRef = E7C59304144F1F5C001561A3 /* tilt.c */; };
+		E7C5935C144F1F5C001561A3 /* usb_libusb10.c in Sources */ = {isa = PBXBuildFile; fileRef = E7C59305144F1F5C001561A3 /* usb_libusb10.c */; };
+		E7C5935D144F1F5C001561A3 /* usb-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C5930D144F1F5C001561A3 /* usb-1.0.a */; };
+		E7C5935E144F1F5C001561A3 /* ofxKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C59343144F1F5C001561A3 /* ofxKinect.cpp */; };
+		E7C596DF144F59D9001561A3 /* DPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C596BD144F59D9001561A3 /* DPP.framework */; };
+		E7C596E0144F59D9001561A3 /* EDSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C596BE144F59D9001561A3 /* EDSDK.framework */; };
+		E7C596E1144F59D9001561A3 /* EdsExamples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596C9144F59D9001561A3 /* EdsExamples.cpp */; };
+		E7C596E2144F59D9001561A3 /* EdsException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596CB144F59D9001561A3 /* EdsException.cpp */; };
+		E7C596E3144F59D9001561A3 /* EdsStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596CD144F59D9001561A3 /* EdsStrings.cpp */; };
+		E7C596E4144F59D9001561A3 /* EdsWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596CF144F59D9001561A3 /* EdsWrapper.cpp */; };
+		E7C596E5144F59D9001561A3 /* ofxEdsdk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7C596D2144F59D9001561A3 /* ofxEdsdk.cpp */; };
+		E7C59723144F5DD7001561A3 /* DPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7C596BD144F59D9001561A3 /* DPP.framework */; };
+		E7C59724144F5DD7001561A3 /* EDSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7C596BE144F59D9001561A3 /* EDSDK.framework */; };
 		E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AED144E60200065E4C0 /* tinyxml.cpp */; };
 		E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AEF144E60200065E4C0 /* tinyxmlerror.cpp */; };
 		E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */; };
 		E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */; };
+		F38677DB1451CD630067536D /* ofxCvCheckerboardPreview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F38677D91451CD630067536D /* ofxCvCheckerboardPreview.cpp */; };
+		F386FE911450815C007BEF51 /* ofxGameCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F386FE881450815B007BEF51 /* ofxGameCamera.cpp */; };
+		F391F2DA14533B2C0081ECBC /* scrScrub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F391F2D914533B2C0081ECBC /* scrScrub.cpp */; };
+		F3C552E41450DED3009F95C1 /* ofxKinectPointcloudRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3C552E21450DED3009F95C1 /* ofxKinectPointcloudRecorder.cpp */; };
+		F3C552FD1450FFE5009F95C1 /* scrGameView3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F3C552FB1450FFE5009F95C1 /* scrGameView3D.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +112,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E7C59723144F5DD7001561A3 /* DPP.framework in CopyFiles */,
+				E7C59724144F5DD7001561A3 /* EDSDK.framework in CopyFiles */,
 				BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,12 +226,8 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
-		E744B078144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxCvCheckerboardPreview.cpp; path = "../common src/ofxCvCheckerboardPreview.cpp"; sourceTree = SOURCE_ROOT; };
-		E744B079144FC1BC00F67D84 /* ofxCvCheckerboardPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxCvCheckerboardPreview.h; path = "../common src/ofxCvCheckerboardPreview.h"; sourceTree = SOURCE_ROOT; };
 		E744B07A144FC1BC00F67D84 /* ofxRGBDAlignment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxRGBDAlignment.cpp; path = "../common src/ofxRGBDAlignment.cpp"; sourceTree = SOURCE_ROOT; };
 		E744B07B144FC1BC00F67D84 /* ofxRGBDAlignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxRGBDAlignment.h; path = "../common src/ofxRGBDAlignment.h"; sourceTree = SOURCE_ROOT; };
-		E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scrGameView3D.cpp; path = "../common src/scrGameView3D.cpp"; sourceTree = SOURCE_ROOT; };
-		E744B07F144FC1CE00F67D84 /* scrGameView3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scrGameView3D.h; path = "../common src/scrGameView3D.h"; sourceTree = SOURCE_ROOT; };
 		E7C4A332144DC3A4006A94E4 /* button-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-plus.png"; sourceTree = "<group>"; };
 		E7C4A333144DC3A4006A94E4 /* button-plus_over.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-plus_over.png"; sourceTree = "<group>"; };
 		E7C4A334144DC3A4006A94E4 /* button-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-switch.png"; sourceTree = "<group>"; };
@@ -271,8 +288,78 @@
 		E7C4A371144DC3A4006A94E4 /* wdgTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wdgTransform.h; sourceTree = "<group>"; };
 		E7C4A372144DC3A4006A94E4 /* wdgXYZ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wdgXYZ.cpp; sourceTree = "<group>"; };
 		E7C4A373144DC3A4006A94E4 /* wdgXYZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wdgXYZ.h; sourceTree = "<group>"; };
-		E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
-		E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
+		E7C592F7144F1F5C001561A3 /* cameras.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cameras.c; sourceTree = "<group>"; };
+		E7C592F8144F1F5C001561A3 /* cameras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cameras.h; sourceTree = "<group>"; };
+		E7C592F9144F1F5C001561A3 /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core.c; sourceTree = "<group>"; };
+		E7C592FA144F1F5C001561A3 /* freenect_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = freenect_internal.h; sourceTree = "<group>"; };
+		E7C592FD144F1F5C001561A3 /* freenect.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = freenect.dll; sourceTree = "<group>"; };
+		E7C592FE144F1F5C001561A3 /* freenect.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = freenect.lib; sourceTree = "<group>"; };
+		E7C592FF144F1F5C001561A3 /* libfreenect-registration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "libfreenect-registration.h"; sourceTree = "<group>"; };
+		E7C59300144F1F5C001561A3 /* libfreenect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libfreenect.h; sourceTree = "<group>"; };
+		E7C59301144F1F5C001561A3 /* libfreenect.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libfreenect.pc.in; sourceTree = "<group>"; };
+		E7C59302144F1F5C001561A3 /* registration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = registration.c; sourceTree = "<group>"; };
+		E7C59303144F1F5C001561A3 /* registration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registration.h; sourceTree = "<group>"; };
+		E7C59304144F1F5C001561A3 /* tilt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tilt.c; sourceTree = "<group>"; };
+		E7C59305144F1F5C001561A3 /* usb_libusb10.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_libusb10.c; sourceTree = "<group>"; };
+		E7C59306144F1F5C001561A3 /* usb_libusb10.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_libusb10.h; sourceTree = "<group>"; };
+		E7C5930B144F1F5C001561A3 /* libusb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libusb.h; sourceTree = "<group>"; };
+		E7C5930D144F1F5C001561A3 /* usb-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "usb-1.0.a"; sourceTree = "<group>"; };
+		E7C59312144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59313144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59315144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59316144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59317144F1F5C001561A3 /* libusb-win32-bin-README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libusb-win32-bin-README.txt"; sourceTree = "<group>"; };
+		E7C5931A144F1F5C001561A3 /* installer_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = installer_license.txt; sourceTree = "<group>"; };
+		E7C5931C144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C5931D144F1F5C001561A3 /* libusb0_x86.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0_x86.dll; sourceTree = "<group>"; };
+		E7C5931E144F1F5C001561A3 /* Xbox_NUI_Audio.cat */ = {isa = PBXFileReference; lastKnownFileType = file; path = Xbox_NUI_Audio.cat; sourceTree = "<group>"; };
+		E7C5931F144F1F5C001561A3 /* Xbox_NUI_Audio.inf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Xbox_NUI_Audio.inf; sourceTree = "<group>"; };
+		E7C59322144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59323144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59325144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59326144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59327144F1F5C001561A3 /* libusb-win32-bin-README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libusb-win32-bin-README.txt"; sourceTree = "<group>"; };
+		E7C5932A144F1F5C001561A3 /* installer_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = installer_license.txt; sourceTree = "<group>"; };
+		E7C5932C144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C5932D144F1F5C001561A3 /* libusb0_x86.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0_x86.dll; sourceTree = "<group>"; };
+		E7C5932E144F1F5C001561A3 /* Xbox_NUI_Camera.cat */ = {isa = PBXFileReference; lastKnownFileType = file; path = Xbox_NUI_Camera.cat; sourceTree = "<group>"; };
+		E7C5932F144F1F5C001561A3 /* Xbox_NUI_Camera.inf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Xbox_NUI_Camera.inf; sourceTree = "<group>"; };
+		E7C59332144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59333144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59335144F1F5C001561A3 /* libusb0.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.dll; sourceTree = "<group>"; };
+		E7C59336144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C59337144F1F5C001561A3 /* libusb-win32-bin-README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libusb-win32-bin-README.txt"; sourceTree = "<group>"; };
+		E7C5933A144F1F5C001561A3 /* installer_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = installer_license.txt; sourceTree = "<group>"; };
+		E7C5933C144F1F5C001561A3 /* libusb0.sys */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0.sys; sourceTree = "<group>"; };
+		E7C5933D144F1F5C001561A3 /* libusb0_x86.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = libusb0_x86.dll; sourceTree = "<group>"; };
+		E7C5933E144F1F5C001561A3 /* Xbox_NUI_Motor.cat */ = {isa = PBXFileReference; lastKnownFileType = file; path = Xbox_NUI_Motor.cat; sourceTree = "<group>"; };
+		E7C5933F144F1F5C001561A3 /* Xbox_NUI_Motor.inf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Xbox_NUI_Motor.inf; sourceTree = "<group>"; };
+		E7C59340144F1F5C001561A3 /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
+		E7C59342144F1F5C001561A3 /* ofxBase3DVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBase3DVideo.h; sourceTree = "<group>"; };
+		E7C59343144F1F5C001561A3 /* ofxKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxKinect.cpp; sourceTree = "<group>"; };
+		E7C59344144F1F5C001561A3 /* ofxKinect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxKinect.h; sourceTree = "<group>"; };
+		E7C596BC144F59D9001561A3 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E7C596BD144F59D9001561A3 /* DPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DPP.framework; sourceTree = "<group>"; };
+		E7C596BE144F59D9001561A3 /* EDSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EDSDK.framework; sourceTree = "<group>"; };
+		E7C596BF144F59D9001561A3 /* readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
+		E7C596C1144F59D9001561A3 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E7C596C2144F59D9001561A3 /* EDSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDK.h; sourceTree = "<group>"; };
+		E7C596C3144F59D9001561A3 /* EDSDKErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKErrors.h; sourceTree = "<group>"; };
+		E7C596C4144F59D9001561A3 /* EDSDKTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKTypes.h; sourceTree = "<group>"; };
+		E7C596C5144F59D9001561A3 /* readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
+		E7C596C6144F59D9001561A3 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
+		E7C596C9144F59D9001561A3 /* EdsExamples.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EdsExamples.cpp; sourceTree = "<group>"; };
+		E7C596CA144F59D9001561A3 /* EdsExamples.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EdsExamples.h; sourceTree = "<group>"; };
+		E7C596CB144F59D9001561A3 /* EdsException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EdsException.cpp; sourceTree = "<group>"; };
+		E7C596CC144F59D9001561A3 /* EdsException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EdsException.h; sourceTree = "<group>"; };
+		E7C596CD144F59D9001561A3 /* EdsStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EdsStrings.cpp; sourceTree = "<group>"; };
+		E7C596CE144F59D9001561A3 /* EdsStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EdsStrings.h; sourceTree = "<group>"; };
+		E7C596CF144F59D9001561A3 /* EdsWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EdsWrapper.cpp; sourceTree = "<group>"; };
+		E7C596D0144F59D9001561A3 /* EdsWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EdsWrapper.h; sourceTree = "<group>"; };
+		E7C596D1144F59D9001561A3 /* FixedQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixedQueue.h; sourceTree = "<group>"; };
+		E7C596D2144F59D9001561A3 /* ofxEdsdk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEdsdk.cpp; sourceTree = "<group>"; };
+		E7C596D3144F59D9001561A3 /* ofxEdsdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEdsdk.h; sourceTree = "<group>"; };
+		E7C596D4144F59D9001561A3 /* RateTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RateTimer.h; sourceTree = "<group>"; };
 		E7CA4AEB144E60200065E4C0 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		E7CA4AED144E60200065E4C0 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		E7CA4AEE144E60200065E4C0 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
@@ -280,6 +367,16 @@
 		E7CA4AF0144E60200065E4C0 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		E7CA4AF2144E60200065E4C0 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		E7CA4AF3144E60200065E4C0 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		F38677D91451CD630067536D /* ofxCvCheckerboardPreview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxCvCheckerboardPreview.cpp; path = "../../common src/ofxCvCheckerboardPreview.cpp"; sourceTree = "<group>"; };
+		F38677DA1451CD630067536D /* ofxCvCheckerboardPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxCvCheckerboardPreview.h; path = "../../common src/ofxCvCheckerboardPreview.h"; sourceTree = "<group>"; };
+		F386FE881450815B007BEF51 /* ofxGameCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGameCamera.cpp; sourceTree = "<group>"; };
+		F386FE891450815B007BEF51 /* ofxGameCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGameCamera.h; sourceTree = "<group>"; };
+		F391F2D914533B2C0081ECBC /* scrScrub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scrScrub.cpp; sourceTree = "<group>"; };
+		F391F2DB14533B350081ECBC /* scrScrub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scrScrub.h; sourceTree = "<group>"; };
+		F3C552E21450DED3009F95C1 /* ofxKinectPointcloudRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxKinectPointcloudRecorder.cpp; path = "../../common src/ofxKinectPointcloudRecorder.cpp"; sourceTree = "<group>"; };
+		F3C552E31450DED3009F95C1 /* ofxKinectPointcloudRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxKinectPointcloudRecorder.h; path = "../../common src/ofxKinectPointcloudRecorder.h"; sourceTree = "<group>"; };
+		F3C552FB1450FFE5009F95C1 /* scrGameView3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scrGameView3D.cpp; path = "../../common src/scrGameView3D.cpp"; sourceTree = "<group>"; };
+		F3C552FC1450FFE5009F95C1 /* scrGameView3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scrGameView3D.h; path = "../../common src/scrGameView3D.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +399,10 @@
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
 				E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */,
 				2705B477143D6E6600F2A09E /* opencv.a in Frameworks */,
+				E7C59359144F1F5C001561A3 /* freenect.lib in Frameworks */,
+				E7C5935D144F1F5C001561A3 /* usb-1.0.a in Frameworks */,
+				E7C596DF144F59D9001561A3 /* DPP.framework in Frameworks */,
+				E7C596E0144F59D9001561A3 /* EDSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,8 +718,10 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				F386FE741450815B007BEF51 /* ofxGameCamera */,
+				E7C5965F144F59D8001561A3 /* ofxEdsdk */,
+				E7C5928E144F1F5C001561A3 /* ofxKinect */,
 				E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */,
-				E7CA4A35144E60070065E4C0 /* ofxGameCamera */,
 				E7C4A305144DC3A3006A94E4 /* ofxCVgui */,
 				2705B337143D6DA300F2A09E /* ofxCv */,
 			);
@@ -736,10 +839,10 @@
 		E7C4A338144DC3A4006A94E4 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E7C4A345144DC3A4006A94E4 /* ofxCVgui.h */,
 				E7C4A339144DC3A4006A94E4 /* histograms */,
 				E7C4A33C144DC3A4006A94E4 /* include */,
 				E7C4A344144DC3A4006A94E4 /* ofxCVgui.cpp */,
-				E7C4A345144DC3A4006A94E4 /* ofxCVgui.h */,
 				E7C4A346144DC3A4006A94E4 /* screens */,
 				E7C4A361144DC3A4006A94E4 /* widgets */,
 			);
@@ -837,32 +940,394 @@
 		E7C4A6D0144E0C34006A94E4 /* shared source */ = {
 			isa = PBXGroup;
 			children = (
-				E744B079144FC1BC00F67D84 /* ofxCvCheckerboardPreview.h */,
-				E744B078144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp */,
+				F3C552E31450DED3009F95C1 /* ofxKinectPointcloudRecorder.h */,
+				F3C552E21450DED3009F95C1 /* ofxKinectPointcloudRecorder.cpp */,
 				E744B07B144FC1BC00F67D84 /* ofxRGBDAlignment.h */,
 				E744B07A144FC1BC00F67D84 /* ofxRGBDAlignment.cpp */,
-				E744B07E144FC1CE00F67D84 /* scrGameView3D.cpp */,
-				E744B07F144FC1CE00F67D84 /* scrGameView3D.h */,
+				F38677DA1451CD630067536D /* ofxCvCheckerboardPreview.h */,
+				F38677D91451CD630067536D /* ofxCvCheckerboardPreview.cpp */,
+				F3C552FC1450FFE5009F95C1 /* scrGameView3D.h */,
+				F3C552FB1450FFE5009F95C1 /* scrGameView3D.cpp */,
+				F391F2DB14533B350081ECBC /* scrScrub.h */,
+				F391F2D914533B2C0081ECBC /* scrScrub.cpp */,
 			);
 			name = "shared source";
 			sourceTree = "<group>";
 		};
-		E7CA4A35144E60070065E4C0 /* ofxGameCamera */ = {
+		E7C5928E144F1F5C001561A3 /* ofxKinect */ = {
 			isa = PBXGroup;
 			children = (
-				E7CA4AD0144E60080065E4C0 /* src */,
+				E7C592F5144F1F5C001561A3 /* libs */,
+				E7C59340144F1F5C001561A3 /* README.markdown */,
+				E7C59341144F1F5C001561A3 /* src */,
 			);
-			name = ofxGameCamera;
-			path = ../../../addons/ofxGameCamera;
+			name = ofxKinect;
+			path = ../../../addons/ofxKinect;
 			sourceTree = SOURCE_ROOT;
 		};
-		E7CA4AD0144E60080065E4C0 /* src */ = {
+		E7C592F5144F1F5C001561A3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				E7CA4AD1144E60080065E4C0 /* ofxGameCamera.cpp */,
-				E7CA4AD2144E60080065E4C0 /* ofxGameCamera.h */,
+				E7C592F6144F1F5C001561A3 /* libfreenect */,
+				E7C59307144F1F5C001561A3 /* libusb */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E7C592F6144F1F5C001561A3 /* libfreenect */ = {
+			isa = PBXGroup;
+			children = (
+				E7C592F7144F1F5C001561A3 /* cameras.c */,
+				E7C592F8144F1F5C001561A3 /* cameras.h */,
+				E7C592F9144F1F5C001561A3 /* core.c */,
+				E7C592FA144F1F5C001561A3 /* freenect_internal.h */,
+				E7C592FB144F1F5C001561A3 /* lib */,
+				E7C592FF144F1F5C001561A3 /* libfreenect-registration.h */,
+				E7C59300144F1F5C001561A3 /* libfreenect.h */,
+				E7C59301144F1F5C001561A3 /* libfreenect.pc.in */,
+				E7C59302144F1F5C001561A3 /* registration.c */,
+				E7C59303144F1F5C001561A3 /* registration.h */,
+				E7C59304144F1F5C001561A3 /* tilt.c */,
+				E7C59305144F1F5C001561A3 /* usb_libusb10.c */,
+				E7C59306144F1F5C001561A3 /* usb_libusb10.h */,
+			);
+			path = libfreenect;
+			sourceTree = "<group>";
+		};
+		E7C592FB144F1F5C001561A3 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E7C592FC144F1F5C001561A3 /* vs2010 */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E7C592FC144F1F5C001561A3 /* vs2010 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C592FD144F1F5C001561A3 /* freenect.dll */,
+				E7C592FE144F1F5C001561A3 /* freenect.lib */,
+			);
+			path = vs2010;
+			sourceTree = "<group>";
+		};
+		E7C59307144F1F5C001561A3 /* libusb */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59308144F1F5C001561A3 /* osx */,
+				E7C5930E144F1F5C001561A3 /* win */,
+			);
+			path = libusb;
+			sourceTree = "<group>";
+		};
+		E7C59308144F1F5C001561A3 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59309144F1F5C001561A3 /* include */,
+				E7C5930C144F1F5C001561A3 /* libs */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		E7C59309144F1F5C001561A3 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5930A144F1F5C001561A3 /* libusb-1.0 */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E7C5930A144F1F5C001561A3 /* libusb-1.0 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5930B144F1F5C001561A3 /* libusb.h */,
+			);
+			path = "libusb-1.0";
+			sourceTree = "<group>";
+		};
+		E7C5930C144F1F5C001561A3 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5930D144F1F5C001561A3 /* usb-1.0.a */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E7C5930E144F1F5C001561A3 /* win */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5930F144F1F5C001561A3 /* inf */,
+			);
+			path = win;
+			sourceTree = "<group>";
+		};
+		E7C5930F144F1F5C001561A3 /* inf */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59310144F1F5C001561A3 /* xbox nui audio */,
+				E7C59320144F1F5C001561A3 /* xbox nui camera */,
+				E7C59330144F1F5C001561A3 /* xbox nui motor */,
+			);
+			path = inf;
+			sourceTree = "<group>";
+		};
+		E7C59310144F1F5C001561A3 /* xbox nui audio */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59311144F1F5C001561A3 /* amd64 */,
+				E7C59314144F1F5C001561A3 /* ia64 */,
+				E7C59317144F1F5C001561A3 /* libusb-win32-bin-README.txt */,
+				E7C59318144F1F5C001561A3 /* license */,
+				E7C5931B144F1F5C001561A3 /* x86 */,
+				E7C5931E144F1F5C001561A3 /* Xbox_NUI_Audio.cat */,
+				E7C5931F144F1F5C001561A3 /* Xbox_NUI_Audio.inf */,
+			);
+			path = "xbox nui audio";
+			sourceTree = "<group>";
+		};
+		E7C59311144F1F5C001561A3 /* amd64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59312144F1F5C001561A3 /* libusb0.dll */,
+				E7C59313144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = amd64;
+			sourceTree = "<group>";
+		};
+		E7C59314144F1F5C001561A3 /* ia64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59315144F1F5C001561A3 /* libusb0.dll */,
+				E7C59316144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = ia64;
+			sourceTree = "<group>";
+		};
+		E7C59318144F1F5C001561A3 /* license */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59319144F1F5C001561A3 /* libusb-win32 */,
+			);
+			path = license;
+			sourceTree = "<group>";
+		};
+		E7C59319144F1F5C001561A3 /* libusb-win32 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5931A144F1F5C001561A3 /* installer_license.txt */,
+			);
+			path = "libusb-win32";
+			sourceTree = "<group>";
+		};
+		E7C5931B144F1F5C001561A3 /* x86 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5931C144F1F5C001561A3 /* libusb0.sys */,
+				E7C5931D144F1F5C001561A3 /* libusb0_x86.dll */,
+			);
+			path = x86;
+			sourceTree = "<group>";
+		};
+		E7C59320144F1F5C001561A3 /* xbox nui camera */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59321144F1F5C001561A3 /* amd64 */,
+				E7C59324144F1F5C001561A3 /* ia64 */,
+				E7C59327144F1F5C001561A3 /* libusb-win32-bin-README.txt */,
+				E7C59328144F1F5C001561A3 /* license */,
+				E7C5932B144F1F5C001561A3 /* x86 */,
+				E7C5932E144F1F5C001561A3 /* Xbox_NUI_Camera.cat */,
+				E7C5932F144F1F5C001561A3 /* Xbox_NUI_Camera.inf */,
+			);
+			path = "xbox nui camera";
+			sourceTree = "<group>";
+		};
+		E7C59321144F1F5C001561A3 /* amd64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59322144F1F5C001561A3 /* libusb0.dll */,
+				E7C59323144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = amd64;
+			sourceTree = "<group>";
+		};
+		E7C59324144F1F5C001561A3 /* ia64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59325144F1F5C001561A3 /* libusb0.dll */,
+				E7C59326144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = ia64;
+			sourceTree = "<group>";
+		};
+		E7C59328144F1F5C001561A3 /* license */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59329144F1F5C001561A3 /* libusb-win32 */,
+			);
+			path = license;
+			sourceTree = "<group>";
+		};
+		E7C59329144F1F5C001561A3 /* libusb-win32 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5932A144F1F5C001561A3 /* installer_license.txt */,
+			);
+			path = "libusb-win32";
+			sourceTree = "<group>";
+		};
+		E7C5932B144F1F5C001561A3 /* x86 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5932C144F1F5C001561A3 /* libusb0.sys */,
+				E7C5932D144F1F5C001561A3 /* libusb0_x86.dll */,
+			);
+			path = x86;
+			sourceTree = "<group>";
+		};
+		E7C59330144F1F5C001561A3 /* xbox nui motor */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59331144F1F5C001561A3 /* amd64 */,
+				E7C59334144F1F5C001561A3 /* ia64 */,
+				E7C59337144F1F5C001561A3 /* libusb-win32-bin-README.txt */,
+				E7C59338144F1F5C001561A3 /* license */,
+				E7C5933B144F1F5C001561A3 /* x86 */,
+				E7C5933E144F1F5C001561A3 /* Xbox_NUI_Motor.cat */,
+				E7C5933F144F1F5C001561A3 /* Xbox_NUI_Motor.inf */,
+			);
+			path = "xbox nui motor";
+			sourceTree = "<group>";
+		};
+		E7C59331144F1F5C001561A3 /* amd64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59332144F1F5C001561A3 /* libusb0.dll */,
+				E7C59333144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = amd64;
+			sourceTree = "<group>";
+		};
+		E7C59334144F1F5C001561A3 /* ia64 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59335144F1F5C001561A3 /* libusb0.dll */,
+				E7C59336144F1F5C001561A3 /* libusb0.sys */,
+			);
+			path = ia64;
+			sourceTree = "<group>";
+		};
+		E7C59338144F1F5C001561A3 /* license */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59339144F1F5C001561A3 /* libusb-win32 */,
+			);
+			path = license;
+			sourceTree = "<group>";
+		};
+		E7C59339144F1F5C001561A3 /* libusb-win32 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5933A144F1F5C001561A3 /* installer_license.txt */,
+			);
+			path = "libusb-win32";
+			sourceTree = "<group>";
+		};
+		E7C5933B144F1F5C001561A3 /* x86 */ = {
+			isa = PBXGroup;
+			children = (
+				E7C5933C144F1F5C001561A3 /* libusb0.sys */,
+				E7C5933D144F1F5C001561A3 /* libusb0_x86.dll */,
+			);
+			path = x86;
+			sourceTree = "<group>";
+		};
+		E7C59341144F1F5C001561A3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7C59342144F1F5C001561A3 /* ofxBase3DVideo.h */,
+				E7C59343144F1F5C001561A3 /* ofxKinect.cpp */,
+				E7C59344144F1F5C001561A3 /* ofxKinect.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		E7C5965F144F59D8001561A3 /* ofxEdsdk */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596B9144F59D8001561A3 /* lib */,
+				E7C596C6144F59D9001561A3 /* readme.md */,
+				E7C596C7144F59D9001561A3 /* src */,
+			);
+			name = ofxEdsdk;
+			path = ../../../addons/ofxEdsdk;
+			sourceTree = SOURCE_ROOT;
+		};
+		E7C596B9144F59D8001561A3 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596BA144F59D8001561A3 /* EDSDK */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E7C596BA144F59D8001561A3 /* EDSDK */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596BB144F59D8001561A3 /* Framework */,
+				E7C596C0144F59D9001561A3 /* Header */,
+			);
+			path = EDSDK;
+			sourceTree = "<group>";
+		};
+		E7C596BB144F59D8001561A3 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596BC144F59D9001561A3 /* .gitignore */,
+				E7C596BD144F59D9001561A3 /* DPP.framework */,
+				E7C596BE144F59D9001561A3 /* EDSDK.framework */,
+				E7C596BF144F59D9001561A3 /* readme */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
+		E7C596C0144F59D9001561A3 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596C1144F59D9001561A3 /* .gitignore */,
+				E7C596C2144F59D9001561A3 /* EDSDK.h */,
+				E7C596C3144F59D9001561A3 /* EDSDKErrors.h */,
+				E7C596C4144F59D9001561A3 /* EDSDKTypes.h */,
+				E7C596C5144F59D9001561A3 /* readme */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		E7C596C7144F59D9001561A3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596C8144F59D9001561A3 /* EdsWrapper */,
+				E7C596D1144F59D9001561A3 /* FixedQueue.h */,
+				E7C596D2144F59D9001561A3 /* ofxEdsdk.cpp */,
+				E7C596D3144F59D9001561A3 /* ofxEdsdk.h */,
+				E7C596D4144F59D9001561A3 /* RateTimer.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E7C596C8144F59D9001561A3 /* EdsWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				E7C596C9144F59D9001561A3 /* EdsExamples.cpp */,
+				E7C596CA144F59D9001561A3 /* EdsExamples.h */,
+				E7C596CB144F59D9001561A3 /* EdsException.cpp */,
+				E7C596CC144F59D9001561A3 /* EdsException.h */,
+				E7C596CD144F59D9001561A3 /* EdsStrings.cpp */,
+				E7C596CE144F59D9001561A3 /* EdsStrings.h */,
+				E7C596CF144F59D9001561A3 /* EdsWrapper.cpp */,
+				E7C596D0144F59D9001561A3 /* EdsWrapper.h */,
+			);
+			path = EdsWrapper;
 			sourceTree = "<group>";
 		};
 		E7CA4AEA144E60200065E4C0 /* ofxXmlSettings */ = {
@@ -896,6 +1361,24 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		F386FE741450815B007BEF51 /* ofxGameCamera */ = {
+			isa = PBXGroup;
+			children = (
+				F386FE871450815B007BEF51 /* src */,
+			);
+			name = ofxGameCamera;
+			path = ../../../addons/ofxGameCamera;
+			sourceTree = "<group>";
+		};
+		F386FE871450815B007BEF51 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F386FE881450815B007BEF51 /* ofxGameCamera.cpp */,
+				F386FE891450815B007BEF51 /* ofxGameCamera.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -925,6 +1408,7 @@
 			isa = PBXProject;
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "RGBDPost" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -1015,14 +1499,27 @@
 				E7C4A38C144DC3A4006A94E4 /* wdgSlider.cpp in Sources */,
 				E7C4A38D144DC3A4006A94E4 /* wdgTransform.cpp in Sources */,
 				E7C4A38E144DC3A4006A94E4 /* wdgXYZ.cpp in Sources */,
-				E7CA4ADC144E60080065E4C0 /* ofxGameCamera.cpp in Sources */,
 				E7CA4AF4144E60200065E4C0 /* tinyxml.cpp in Sources */,
 				E7CA4AF5144E60200065E4C0 /* tinyxmlerror.cpp in Sources */,
 				E7CA4AF6144E60200065E4C0 /* tinyxmlparser.cpp in Sources */,
 				E7CA4AF7144E60200065E4C0 /* ofxXmlSettings.cpp in Sources */,
-				E744B07C144FC1BC00F67D84 /* ofxCvCheckerboardPreview.cpp in Sources */,
+				E7C59357144F1F5C001561A3 /* cameras.c in Sources */,
+				E7C59358144F1F5C001561A3 /* core.c in Sources */,
+				E7C5935A144F1F5C001561A3 /* registration.c in Sources */,
+				E7C5935B144F1F5C001561A3 /* tilt.c in Sources */,
+				E7C5935C144F1F5C001561A3 /* usb_libusb10.c in Sources */,
+				E7C5935E144F1F5C001561A3 /* ofxKinect.cpp in Sources */,
+				E7C596E1144F59D9001561A3 /* EdsExamples.cpp in Sources */,
+				E7C596E2144F59D9001561A3 /* EdsException.cpp in Sources */,
+				E7C596E3144F59D9001561A3 /* EdsStrings.cpp in Sources */,
+				E7C596E4144F59D9001561A3 /* EdsWrapper.cpp in Sources */,
+				E7C596E5144F59D9001561A3 /* ofxEdsdk.cpp in Sources */,
 				E744B07D144FC1BC00F67D84 /* ofxRGBDAlignment.cpp in Sources */,
-				E744B080144FC1CE00F67D84 /* scrGameView3D.cpp in Sources */,
+				F386FE911450815C007BEF51 /* ofxGameCamera.cpp in Sources */,
+				F3C552E41450DED3009F95C1 /* ofxKinectPointcloudRecorder.cpp in Sources */,
+				F3C552FD1450FFE5009F95C1 /* scrGameView3D.cpp in Sources */,
+				F38677DB1451CD630067536D /* ofxCvCheckerboardPreview.cpp in Sources */,
+				F391F2DA14533B2C0081ECBC /* scrScrub.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

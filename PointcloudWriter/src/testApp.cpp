@@ -16,8 +16,9 @@ void testApp::setup(){
 	
 	recording = false;
 	
-	recorder.setup();
-	recorder.setRecordLocation("depthframes", "frame_");
+
+    recorder.setRecordLocation("depthframes", "frame_");
+    recorder.setup();
 	
 	cam.speed = 5;
 
@@ -102,29 +103,41 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
 	if(key == ' '){
 		recording = !recording;
+        if(recording){
+            ofImage posterFrame;
+            posterFrame.setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+            recorder.incrementFolder(posterFrame);
+        }
 	}
 
 	if(key == 'l'){
 		ofDirectory d("depthframes");
 		d.allowExt("xkcd");
-		d.listDir();
+		int numfiles = d.listDir();
 		frameRead = true;
-//		for(int f = 0; f < files.size(); f++){
-		for(int f = 0; f < 1; f++){			
+		for(int f = 0; f < 30; f++){
+//		for(int f = 0; f < 1; f++){			
 			vector<ofVec3f> cloud;
-			unsigned short* frame = recorder.readDepthFrame(d.getName(f));
+			unsigned short* frame = recorder.readDepthFrame( "depthframes/" + d.getName(f) );
 			for(int y = 0; y < 480; y++){
 				for(int x = 0; x < 640; x++){
-					cout << frame[y*640+x] << endl;
+					//cout << frame[y*640+x] << endl;
 					ofVec3f v = kinect.getWorldCoordinateAt(x, y, frame[y*640+x] );
 					cloud.push_back( v );
 				}
 			}
-			cout << "read frame " << files[f].getFileName() << endl;
+			cout << "read frame depthframes/" <<d.getName(f) << endl;
 			delete frame;
 			clouds.push_back( cloud );
 		}
 	}
+    
+    if(key == 'c'){
+        string filename = "__CalibFile_" + ofToString(ofGetDay()) + "_" + ofToString(ofGetHours()) + "_" + ofToString(ofGetMinutes()) + "_" + ofToString(ofGetSeconds()) +".png";
+        ofImage kinectImage;
+        kinectImage.setFromPixels(kinect.getPixels(), 640, 480, OF_IMAGE_COLOR);
+        ofSaveImage( kinectImage, filename);
+    }
 }
 
 void testApp::exit() {
